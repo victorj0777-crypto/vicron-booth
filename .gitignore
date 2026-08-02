@@ -4,5 +4,5 @@ assets/_full/
 assets/_previous/
 
 .DS_Store
-.vercel/
+.railway/
 node_modules/
