@@ -1198,6 +1198,12 @@ var LEAKS = {
 
   // warm the QR so the code is ready before anyone touches the screen
   paintQR($("#qrResult"));
+
+  // Offline support. Matters when the booth runs off a hosted URL: after one
+  // successful load the venue wifi can die and the kiosk keeps working.
+  if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
+    navigator.serviceWorker.register("sw.js").catch(function(){ /* not fatal */ });
+  }
 })();
 </script>
 </body>

@@ -24,6 +24,36 @@ fully offline: the avatar and every voice line are local files.
 
 ---
 
+## Hosting it (GitHub + Vercel)
+
+The repo is private and the site is meant for **your booth device**, not visitor phones —
+lead capture is per-device `localStorage`, so a visitor running it on their own phone would
+strand their lead in their own browser.
+
+A hosted URL normally means "no internet, no booth." A service worker (`sw.js`) fixes that:
+after one successful load on the booth device, everything runs from cache and the venue wifi
+can die without the kiosk noticing. Verified by killing the server and reloading — the page,
+the avatar video, and every voice line still served.
+
+**One rule:** if you swap the avatar or any voice line, bump `CACHE` in `sw.js`
+(`vicron-booth-v1` → `-v2`). Otherwise booth devices keep serving the old media forever.
+
+Deploy steps, once `gh auth login` is done:
+
+```bash
+gh repo create vicron-booth --private --source=. --push
+```
+
+Then in the Vercel dashboard: **Add New → Project → import `vicron-booth`**. No build settings
+needed — it's a static site, and `vercel.json` already sets long cache headers on `/assets`
+and forces revalidation on `sw.js`. Every push to `main` redeploys.
+
+Before the event, load the URL once on the booth device and let it sit ten seconds so the
+service worker finishes caching. Then put the laptop in airplane mode and confirm it still
+runs. If it does, the venue's wifi is no longer your problem.
+
+---
+
 ## The flow
 
 1. **Attract** — big headline, one button.
