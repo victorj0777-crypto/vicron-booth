@@ -166,7 +166,7 @@ var CONFIG = {
 
   // 1. YOUR BOOKING CALENDAR. GoHighLevel calendar link, Calendly, whatever you use.
   //    Leave "" and the calendar section just won't render.
-  calendarUrl: "",
+  calendarUrl: "https://link.vicronai.com/widget/bookings/ai-employee-bis-x",
 
   // 2. The CRM webhook is NOT set here on purpose — it lives in the host's
   //    environment as CRM_WEBHOOK_URL so it stays out of the page source.
@@ -218,6 +218,24 @@ var SYSTEM = {
     $("#recap").classList.add("show");
   }
 
+  /* The booking widget changes height as the visitor moves from the month view to
+     time slots to the confirmation form. GoHighLevel posts its height on each
+     change; without this the iframe stays fixed and clips the calendar. */
+  function listenForCalendarHeight(){
+    var calOrigin;
+    try { calOrigin = new URL(CONFIG.calendarUrl, location.href).origin; }
+    catch (e) { return; }
+
+    window.addEventListener("message", function(e){
+      if (e.origin !== calOrigin) return;              // only trust the calendar itself
+      var d = e.data;
+      if (!Array.isArray(d) || d[0] !== "highlevel.setHeight") return;
+      var h = d[1] && d[1].height;
+      if (typeof h !== "number" || !isFinite(h)) return;
+      $("#calFrame").style.height = Math.min(Math.max(h, 400), 2400) + "px";
+    });
+  }
+
   /* ctx is "booth" (arrived already captured) or "submitted" (just filled the form).
      Copy differs per context, and again depending on whether a calendar is
      configured at all — so nothing here overwrites a message set elsewhere. */
@@ -240,6 +258,7 @@ var SYSTEM = {
     if (hasCal) {
       $("#calFrame").src = CONFIG.calendarUrl;
       $("#calLink").href = CONFIG.calendarUrl;
+      listenForCalendarHeight();
     } else {
       $("#calWrap").style.display = "none";
       $("#calLink").style.display = "none";
