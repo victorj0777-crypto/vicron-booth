@@ -24,15 +24,13 @@ fully offline: the avatar and every voice line are local files.
 
 ---
 
-## Hosting it (GitHub + Railway)
+## Hosting it (GitHub + Vercel)
 
 The repo is private and the site is meant for **your booth device**, not visitor phones —
 lead capture is per-device `localStorage`, so a visitor running it on their own phone would
 strand their lead in their own browser.
 
-A hosted URL normally means "no internet, no booth" — and on Railway that also means a cold
-container or a platform blip could take the kiosk down mid-event. A service worker (`sw.js`)
-removes both risks:
+A hosted URL normally means "no internet, no booth." A service worker (`sw.js`) fixes that:
 after one successful load on the booth device, everything runs from cache and the venue wifi
 can die without the kiosk noticing. Verified by killing the server and reloading — the page,
 the avatar video, and every voice line still served.
@@ -46,31 +44,25 @@ Deploy steps, once `gh auth login` is done:
 gh repo create vicron-booth --private --source=. --push
 ```
 
-Then in Railway: **New Project → Deploy from GitHub repo → `vicron-booth`**, and once it's
-built, **Settings → Networking → Generate Domain** to get the public URL. Every push to `main`
-redeploys.
+Then in the Vercel dashboard: **Add New → Project → import `vicron-booth`**. No build settings
+needed — `vercel.json` marks it as a static site and sets long cache headers on `/assets` plus
+forced revalidation on `sw.js`. Every push to `main` redeploys.
 
-Railway runs a container rather than a static CDN, so the site needs a process to serve it.
-That's `server.js` — Node built-ins only, no dependencies, nothing to install or keep patched.
-It reads `PORT` from the environment (Railway sets it), serves correct MIME types, sets the
-same cache headers the CDN would have, supports HEAD (the admin media check uses it) and byte
-ranges (video seeking), and refuses to serve anything outside this folder.
-
-`railway.json` pins the start command and a health check on `/`. Nothing else to configure.
-
-Worth knowing: a container bills for uptime, unlike a static host that would serve these 2 MB
-free. If cost ever matters more than keeping everything on Railway, this same repo deploys to
-any static host unchanged — `server.js` is the only piece they wouldn't use.
-
-Run it locally exactly as Railway will:
+**Running it locally** — same server semantics, no Python needed:
 
 ```bash
 cd ~/Downloads/vicron-booth && npm start
 ```
 
+`server.js` is a zero-dependency Node static server (correct MIME types, HEAD, byte ranges for
+video seeking, no path traversal). Vercel doesn't use it — it serves the files directly — but
+it makes local runs one command, and it's what any container host would need. To deploy on
+Railway or similar instead, add a `railway.json` with `"startCommand": "npm start"`; the
+server is already written for it and reads `PORT` from the environment.
+
 Before the event, load the URL once on the booth device and let it sit ten seconds so the
 service worker finishes caching. Then put the laptop in airplane mode and confirm it still
-runs. If it does, neither the venue's wifi nor Railway is your problem any more.
+runs. If it does, the venue's wifi is no longer your problem.
 
 ---
 
