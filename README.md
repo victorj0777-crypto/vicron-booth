@@ -2,8 +2,11 @@
 
 | File | What it is |
 |---|---|
-| `index.html` | The kiosk app. Attract → avatar asks who you are → 2 questions → tailored result + QR. |
+| `index.html` | **Public landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
+| `booth.html` | **The kiosk.** Attract → avatar asks who you are → 2 questions → tailored result + QR. |
 | `handout.html` | The one-page AI Systems Checklist. Open it and print / save as PDF. |
+| `api/lead.js` | Receives the landing-page form and forwards it to your CRM. |
+| `SETUP-CRM-AND-CALENDAR.md` | **Start here.** The two links you still need to fill in. |
 | `assets/` | The avatar video and the voice lines. |
 | `SWAP-IN-TERESA-AND-BRIONY.md` | Step-by-step for dropping in your HeyGen avatar and ElevenLabs voice. |
 | `README.md` | This file. |
@@ -13,10 +16,12 @@
 ## Run it
 
 ```bash
-cd ~/Downloads/vicron-booth && python3 -m http.server 8731
+cd ~/Downloads/vicron-booth && npm start
 ```
 
-Open **http://localhost:8731** in Chrome, then `Cmd`+`Ctrl`+`F` for fullscreen.
+Then:
+- **http://localhost:8731/booth.html** — the kiosk. `Cmd`+`Ctrl`+`F` for fullscreen.
+- **http://localhost:8731/** — the public landing page prospects land on.
 
 Serve it over localhost rather than double-clicking the file — `file://` blocks media
 autoplay and the microphone. No build step, no npm, no API keys. Once loaded it runs
@@ -26,9 +31,14 @@ fully offline: the avatar and every voice line are local files.
 
 ## Hosting it (GitHub + Vercel)
 
-The repo is private and the site is meant for **your booth device**, not visitor phones —
-lead capture is per-device `localStorage`, so a visitor running it on their own phone would
-strand their lead in their own browser.
+The repo is private. Two audiences share one domain:
+
+- **`/` — the landing page.** Public. Prospects scan a QR and land here. Its form posts to
+  `/api/lead`, which forwards to your CRM, then shows your calendar. See
+  `SETUP-CRM-AND-CALENDAR.md` for the two links that still need filling in.
+- **`/booth.html` — the kiosk.** Runs on *your* device at the booth. Its leads stay in that
+  device's `localStorage` and export to CSV, which is deliberate: a local-first capture
+  can't be lost to bad venue wifi.
 
 A hosted URL normally means "no internet, no booth." A service worker (`sw.js`) fixes that:
 after one successful load on the booth device, everything runs from cache and the venue wifi
@@ -36,7 +46,9 @@ can die without the kiosk noticing. Verified by killing the server and reloading
 the avatar video, and every voice line still served.
 
 **One rule:** if you swap the avatar or any voice line, bump `CACHE` in `sw.js`
-(`vicron-booth-v1` → `-v2`). Otherwise booth devices keep serving the old media forever.
+(currently `vicron-booth-v2` → make it `-v3`). Otherwise booth devices keep serving the old
+media from cache forever. The service worker deliberately never caches `/` or `/api/`, so the
+public page and the lead endpoint are always live.
 
 Deploy steps, once `gh auth login` is done:
 
@@ -140,14 +152,16 @@ size. Use it to confirm a media swap actually took before the doors open.
 
 **Export before you close the laptop.** Clearing Chrome's site data for `localhost` wipes them.
 
-If you'd rather leads post straight into a CRM, that's a change to `captureLead()` — but on
-venue wifi, a local-first capture that never drops a lead is the safer default.
+That's the **kiosk's** capture. Leads from the **landing page** take the other path — straight
+into your CRM via `/api/lead`. Two paths on purpose: the kiosk can't depend on the network,
+and the landing page has no device to fall back on.
 
 ---
 
 ## Config
 
-One `CONFIG` block at the top of the `<script>` in `index.html`:
+The kiosk's `CONFIG` block sits at the top of the `<script>` in `booth.html`
+(the landing page has its own, smaller one in `index.html`):
 
 | Key | Notes |
 |---|---|

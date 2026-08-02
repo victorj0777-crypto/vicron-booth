@@ -36,7 +36,20 @@ function cacheFor(pathname) {
   return "public, max-age=0, must-revalidate";
 }
 
+// Same handler Vercel runs at /api/lead, so local and deployed behave identically.
+const leadHandler = require("./api/lead.js");
+
 const server = http.createServer((req, res) => {
+  const route = req.url.split("?")[0];
+
+  if (route === "/api/lead") {
+    return leadHandler(req, res).catch((e) => {
+      console.error("lead handler failed:", e);
+      if (!res.headersSent) res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: false, error: "Server error" }));
+    });
+  }
+
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.writeHead(405, { "Allow": "GET, HEAD" });
     return res.end();
