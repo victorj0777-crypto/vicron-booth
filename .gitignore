@@ -1,0 +1,8 @@
+# Full-resolution masters and the superseded first avatar/voice set.
+# Kept locally for re-editing; no reason to ship or version them.
+assets/_full/
+assets/_previous/
+
+.DS_Store
+.vercel/
+node_modules/

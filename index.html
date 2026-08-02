@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scaling Systems with AI — Meet Your First AI Employee</title>
+<style>
+  :root{
+    /* ---- BRAND: change these five values to rebrand the whole booth ---- */
+    --accent:#3ddc97;
+    --accent-2:#4cc9f0;
+    --bg:#070b14;
+    --panel:#0f1626;
+    --ink:#f2f6ff;
+
+    --muted:#93a3c0;
+    --line:rgba(255,255,255,.10);
+    --r:20px;
+    --pad:clamp(20px,3.2vw,52px);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+    user-select:none;-webkit-user-select:none;   /* kiosk: no accidental text selection */
+  }
+  input{user-select:text;-webkit-user-select:text}
+
+  /* ambient background */
+  .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .bg::before{
+    content:"";position:absolute;inset:-30%;
+    background:
+      radial-gradient(closest-side at 22% 18%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(closest-side at 82% 78%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%);
+    filter:blur(40px);animation:drift 26s ease-in-out infinite alternate;
+  }
+  .bg::after{
+    content:"";position:absolute;inset:0;opacity:.35;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 78%);
+    -webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 78%);
+  }
+  @keyframes drift{from{transform:translate3d(-3%,-2%,0) scale(1)}to{transform:translate3d(4%,3%,0) scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){.bg::before{animation:none}}
+
+  #app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+
+  /* chrome */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:var(--pad) var(--pad) 0}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(11px,1.05vw,14px)}
+  .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 22px color-mix(in srgb,var(--accent) 65%,transparent)}
+  .cohost{color:var(--muted);font-weight:600;letter-spacing:.06em}
+  .iconbtn{
+    appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);
+    border-radius:999px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px
+  }
+  .iconbtn:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+
+  main{flex:1;min-height:0;display:grid;place-items:center;padding:0 var(--pad)}
+  .screen{display:none;width:100%;max-width:1180px;animation:in .42s cubic-bezier(.16,1,.3,1) both}
+  .screen.active{display:block}
+  @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{color:var(--accent);font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:clamp(11px,1.1vw,14px);margin:0 0 14px}
+  h1{font-size:clamp(38px,7.2vw,104px);line-height:.94;letter-spacing:-.035em;margin:0;font-weight:850}
+  h1 .grad{background:linear-gradient(100deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  h2{font-size:clamp(26px,3.9vw,52px);line-height:1.04;letter-spacing:-.028em;margin:0 0 12px;font-weight:820}
+  .lede{font-size:clamp(16px,1.75vw,25px);color:var(--muted);line-height:1.45;max-width:30ch;margin:22px 0 0}
+
+  .cta{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#04121a;
+    font-size:clamp(17px,1.75vw,24px);font-weight:850;letter-spacing:-.01em;
+    padding:clamp(18px,1.9vw,26px) clamp(28px,3vw,46px);border-radius:999px;
+    box-shadow:0 18px 50px -18px color-mix(in srgb,var(--accent) 80%,transparent);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .cta:hover{transform:translateY(-2px)}
+  .cta:active{transform:translateY(1px)}
+  .cta.pulse{animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 18px 50px -18px color-mix(in srgb,var(--accent) 80%,transparent)}50%{box-shadow:0 22px 74px -14px color-mix(in srgb,var(--accent) 95%,transparent)}}
+  .ghost{
+    appearance:none;cursor:pointer;font-family:inherit;background:transparent;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;font-weight:700;
+    font-size:clamp(14px,1.2vw,17px);padding:clamp(14px,1.5vw,20px) clamp(20px,2.2vw,30px);
+  }
+  .ghost:hover{color:var(--ink)}
+  .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:clamp(26px,3.4vw,48px)}
+  .fineprint{color:var(--muted);font-size:clamp(12px,1.05vw,15px);margin-top:18px}
+
+  /* ---- avatar ---- */
+  .leadwrap{display:grid;grid-template-columns:minmax(260px,.85fr) 1.15fr;gap:clamp(22px,3vw,48px);align-items:center}
+  @media (max-width:920px){ .leadwrap{grid-template-columns:1fr} .avatarcol{display:none} }
+  .avatarcol{position:relative}
+  #avatar{
+    width:100%;aspect-ratio:var(--avatar-aspect,1/1);object-fit:cover;display:block;
+    border-radius:26px;border:1px solid var(--line);background:var(--panel);
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.95);
+  }
+  .avatarbadge{
+    position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:8px;
+    background:rgba(4,10,18,.72);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+    font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
+  }
+  .avatarbadge i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.4s steps(2,end) infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .replay{
+    position:absolute;inset:auto 0 14px 0;margin:auto;width:max-content;
+    background:rgba(4,10,18,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
+    border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--muted);
+    cursor:pointer;opacity:0;transition:opacity .3s ease;pointer-events:none;
+  }
+  .replay.show{opacity:1;pointer-events:auto}
+  .replay:hover{color:var(--ink)}
+
+  /* option grids */
+  .grid{display:grid;gap:clamp(10px,1.1vw,16px);margin-top:clamp(20px,2.6vw,36px)}
+  .grid.four{grid-template-columns:repeat(4,1fr)}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:1000px){.grid.four{grid-template-columns:repeat(2,1fr)}.grid.three{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:620px){.grid.four,.grid.three{grid-template-columns:1fr}}
+  .opt{
+    appearance:none;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);
+    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+    border:1px solid var(--line);border-radius:var(--r);
+    padding:clamp(16px,1.7vw,24px);min-height:clamp(104px,11vw,150px);
+    display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
+    transition:border-color .16s ease,transform .16s ease,background .16s ease;
+  }
+  .opt:hover{border-color:color-mix(in srgb,var(--accent) 60%,transparent);transform:translateY(-3px);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03))}
+  .opt .ic{font-size:clamp(22px,2.3vw,30px);line-height:1;margin-bottom:auto}
+  .opt .t{font-weight:800;font-size:clamp(16px,1.5vw,21px);letter-spacing:-.015em}
+  /* min-height keeps titles on one baseline whether the sub wraps to 1 or 2 lines */
+  .opt .s{color:var(--muted);font-size:clamp(12px,1.05vw,15px);line-height:1.35;min-height:2.7em}
+
+  /* progress */
+  .steps{display:flex;gap:8px;align-items:center;margin-top:clamp(24px,3vw,40px)}
+  .steps i{height:4px;flex:1;background:rgba(255,255,255,.10);border-radius:99px;overflow:hidden}
+  .steps i.on{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  .steplabel{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+
+  /* result */
+  .result{display:grid;grid-template-columns:1.55fr .95fr;gap:clamp(18px,2.2vw,34px);align-items:start}
+  @media (max-width:900px){.result{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:clamp(18px,2vw,30px)}
+  .leak{color:var(--muted);font-size:clamp(15px,1.4vw,20px);line-height:1.5;margin:14px 0 0}
+  ul.does{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:11px}
+  ul.does li{display:flex;gap:12px;align-items:flex-start;font-size:clamp(14px,1.25vw,18px);line-height:1.4}
+  ul.does li::before{content:"";flex:0 0 auto;width:9px;height:9px;margin-top:.5em;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:clamp(12px,1.05vw,15px);color:var(--muted);font-weight:600}
+  .qrwrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+  .qr{background:#fff;padding:14px;border-radius:16px;width:clamp(150px,15vw,210px);height:clamp(150px,15vw,210px)}
+  .qr svg{width:100%;height:100%;display:block}
+  .kicker{font-weight:800;font-size:clamp(15px,1.35vw,19px);letter-spacing:-.01em}
+
+  /* form */
+  .form{display:grid;gap:14px;margin-top:clamp(18px,2.2vw,28px)}
+  .field{display:flex;flex-direction:column;gap:8px}
+  label{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  input{
+    font-family:inherit;font-size:clamp(16px,1.4vw,20px);color:var(--ink);
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;
+    padding:clamp(14px,1.4vw,18px) 18px;width:100%;
+  }
+  input:focus{outline:2px solid color-mix(in srgb,var(--accent) 70%,transparent);outline-offset:1px;border-color:transparent}
+  .err{color:#ff8a8a;font-size:14px;font-weight:700;margin-top:12px;min-height:20px}
+
+  /* admin */
+  .overlay{position:fixed;inset:0;z-index:50;background:rgba(3,6,12,.94);padding:var(--pad);overflow:auto}
+  .overlay[hidden]{display:none}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:12px}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span id="brandName">Vicron AI</span></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span class="cohost" id="cohost">ActionCOACH Tampa Bay</span>
+      <button class="iconbtn" id="muteBtn" title="Toggle the agent's voice">🔊 <span>Voice on</span></button>
+    </div>
+  </div>
+
+  <main>
+    <!-- 1. ATTRACT -->
+    <section class="screen active" id="s-attract">
+      <p class="eyebrow">Scaling Systems with AI</p>
+      <h1>Meet your first<br><span class="grad">AI employee.</span></h1>
+      <p class="lede">Talk to her for sixty seconds. Find the one system your business should automate next.</p>
+      <div class="row">
+        <button class="cta pulse" id="startBtn">Start my 60-second AI audit</button>
+      </div>
+      <p class="fineprint">Takes about a minute · She'll ask you two questions</p>
+    </section>
+
+    <!-- 2. LEAD (avatar) -->
+    <section class="screen" id="s-lead">
+      <div class="leadwrap">
+        <div class="avatarcol">
+          <video id="avatar" playsinline preload="auto" poster="assets/avatar-poster.jpg"></video>
+          <div class="avatarbadge"><i></i> AI Systems Coach</div>
+          <button class="replay" id="replayBtn">↻ Replay</button>
+        </div>
+        <div>
+          <p class="eyebrow">Before we start</p>
+          <h2>Who am I<br>talking to?</h2>
+          <div class="form">
+            <div class="field"><label for="f-first">First name</label><input id="f-first" autocomplete="given-name" placeholder="Dana"></div>
+            <div class="field"><label for="f-company">Company</label><input id="f-company" autocomplete="organization" placeholder="Ruiz Barber Co"></div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="dana@ruizbarber.com"></div>
+          </div>
+          <div class="err" id="formErr"></div>
+          <div class="row" style="margin-top:18px">
+            <button class="cta" id="leadNext">Start my audit</button>
+          </div>
+          <p class="fineprint">Goes straight to <span class="coachName">Victor</span>. No list, no spam.</p>
+        </div>
+      </div>
+      <div class="steps"><span class="steplabel">Step 1</span><i class="on"></i><i></i><i></i></div>
+    </section>
+
+    <!-- 3. INDUSTRY -->
+    <section class="screen" id="s-industry">
+      <p class="eyebrow" id="eyebrowIndustry">Question 1 of 2</p>
+      <h2>What kind of business do you run?</h2>
+      <div class="grid four" id="industryGrid"></div>
+      <button class="mic" id="mic1" hidden></button>
+      <div class="steps"><span class="steplabel">Step 2</span><i class="on"></i><i class="on"></i><i></i></div>
+    </section>
+
+    <!-- 4. BOTTLENECK -->
+    <section class="screen" id="s-bottleneck">
+      <p class="eyebrow">Question 2 of 2</p>
+      <h2>Where does it hurt most right now?</h2>
+      <div class="grid three" id="bottleneckGrid"></div>
+      <div class="steps"><span class="steplabel">Step 3</span><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    </section>
+
+    <!-- 5. RESULT -->
+    <section class="screen" id="s-result">
+      <div class="result">
+        <div>
+          <p class="eyebrow" id="resultEyebrow">Your first AI system</p>
+          <h2 id="sysName">—</h2>
+          <p class="leak" id="leakLine">—</p>
+          <ul class="does" id="doesList"></ul>
+          <div class="row">
+            <button class="ghost" id="againBtn">Start over</button>
+          </div>
+        </div>
+        <div class="card qrwrap">
+          <div class="kicker">What you'd watch in 30 days</div>
+          <div class="chips" id="measureChips" style="justify-content:center"></div>
+          <div class="qr" id="qrResult"></div>
+          <div class="muted" style="font-size:14px">Scan to keep this —<br>then go grab <span class="coachName">Victor</span>.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ADMIN -->
+<div class="overlay" id="admin" hidden>
+  <h2 style="margin-bottom:6px">Captured leads</h2>
+  <p class="muted">Stored on this device only. Export before you close the laptop.</p>
+  <div class="row" style="margin-top:16px">
+    <button class="cta" id="exportBtn" style="font-size:16px;padding:14px 24px">Export CSV</button>
+    <button class="ghost" id="clearBtn">Clear all</button>
+    <button class="ghost" id="closeAdmin">Close</button>
+  </div>
+  <div id="leadTable"></div>
+  <div id="mediaCheck"></div>
+</div>
+
+<script>
+/* ============================================================
+   BOOTH CONFIG — edit this block, nothing else.
+   ============================================================ */
+var CONFIG = {
+  brandName:   "Vicron AI",
+  cohost:      "ActionCOACH Tampa Bay",
+  coachName:   "Victor",
+
+  // Where the QR code sends people. Put your real booking/snapshot link here.
+  snapshotUrl: "https://vicron.ai/snapshot",
+
+  // Add ?i=<industry>&b=<bottleneck> to the QR link so you know what they picked.
+  tagQrWithAnswers: true,
+
+  // The avatar clip. Her greeting audio is baked into this file.
+  // To swap in a HeyGen avatar: export the clip, save it over assets/avatar.mp4.
+  avatarVideo: "assets/avatar.mp4",
+
+  // Shape of the avatar frame. "1/1" square, "16/9" landscape, "9/16" portrait.
+  // HeyGen usually exports 16/9 or 9/16 — set this to match or she'll be cropped.
+  avatarAspect: "1/1",
+
+  // ElevenLabs voice lines (pre-generated, so they play instantly and work offline).
+  // If a file is missing, the browser's built-in voice reads the line instead.
+  audio: {
+    industry:   "assets/q-industry.mp3",
+    bottleneck: "assets/q-bottleneck.mp3",
+    leads:      "assets/r-leads.mp3",
+    followup:   "assets/r-followup.mp3",
+    scheduling: "assets/r-scheduling.mp3",
+    admin:      "assets/r-admin.mp3",
+    reviews:    "assets/r-reviews.mp3",
+    retention:  "assets/r-retention.mp3"
+  },
+
+  voice: true,               // agent speaks; visitors can mute from the top-right
+  idleResetSeconds: 75       // reset to the attract screen after this much inactivity
+};
+
+/* ---- QR encoder (verified: decodes clean across QR versions 1-10) ---- */
+// Minimal QR encoder: byte mode, ECC level M, versions 1-10.
+// Returns a 2D array of 0/1 modules. No dependencies.
+(function (global) {
+  'use strict';
+
+  var TOTAL_CW = [null, 26, 44, 70, 100, 134, 172, 196, 242, 292, 346];
+  // version -> [ecCodewordsPerBlock, [[numBlocks, dataCwPerBlock], ...]]
+  var RS_M = [null,
+    [10, [[1, 16]]],
+    [16, [[1, 28]]],
+    [26, [[1, 44]]],
+    [18, [[2, 32]]],
+    [24, [[2, 43]]],
+    [16, [[4, 27]]],
+    [18, [[4, 31]]],
+    [22, [[2, 38], [2, 39]]],
+    [22, [[3, 36], [2, 37]]],
+    [26, [[4, 43], [1, 44]]]
+  ];
+  var ALIGN = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34],
+    [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]];
+
+  // ---- GF(256), primitive polynomial 0x11D ----
+  var EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  (function () {
+    var x = 1;
+    for (var i = 0; i < 255; i++) {
+      EXP[i] = x;
+      LOG[x] = i;
+      x <<= 1;
+      if (x & 0x100) x ^= 0x11d;
+    }
+    for (var j = 255; j < 512; j++) EXP[j] = EXP[j - 255];
+  })();
+
+  function gfMul(a, b) {
+    if (a === 0 || b === 0) return 0;
+    return EXP[LOG[a] + LOG[b]];
+  }
+
+  function rsGenerator(degree) {
+    var poly = [1];
+    for (var i = 0; i < degree; i++) {
+      var next = new Array(poly.length + 1).fill(0);
+      for (var j = 0; j < poly.length; j++) {
+        next[j] ^= poly[j];
+        next[j + 1] ^= gfMul(poly[j], EXP[i]);
+      }
+      poly = next;
+    }
+    return poly;
+  }
+
+  function rsEncode(data, ecLen) {
+    var gen = rsGenerator(ecLen);
+    var res = new Array(ecLen).fill(0);
+    for (var i = 0; i < data.length; i++) {
+      var factor = data[i] ^ res[0];
+      res.shift();
+      res.push(0);
+      for (var j = 0; j < ecLen; j++) res[j] ^= gfMul(gen[j + 1], factor);
+    }
+    return res;
+  }
+
+  // ---- bit buffer ----
+  function BitBuf() { this.bits = []; }
+  BitBuf.prototype.put = function (val, len) {
+    for (var i = len - 1; i >= 0; i--) this.bits.push((val >>> i) & 1);
+  };
+
+  function utf8Bytes(str) {
+    var out = [], i, c;
+    for (i = 0; i < str.length; i++) {
+      c = str.charCodeAt(i);
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) {
+        out.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f));
+      } else if (c >= 0xd800 && c <= 0xdbff && i + 1 < str.length) {
+        var c2 = str.charCodeAt(++i);
+        var cp = 0x10000 + ((c - 0xd800) << 10) + (c2 - 0xdc00);
+        out.push(0xf0 | (cp >> 18), 0x80 | ((cp >> 12) & 0x3f),
+          0x80 | ((cp >> 6) & 0x3f), 0x80 | (cp & 0x3f));
+      } else {
+        out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
+      }
+    }
+    return out;
+  }
+
+  function pickVersion(byteLen) {
+    for (var v = 1; v <= 10; v++) {
+      var ec = RS_M[v][0], blocks = 0;
+      RS_M[v][1].forEach(function (g) { blocks += g[0]; });
+      var dataCw = TOTAL_CW[v] - ec * blocks;
+      var ccBits = v <= 9 ? 8 : 16;
+      if (4 + ccBits + 8 * byteLen <= dataCw * 8) return v;
+    }
+    throw new Error('Data too long for QR version 10 / ECC M');
+  }
+
+  function buildCodewords(bytes, version) {
+    var spec = RS_M[version], ecLen = spec[0], blocks = 0;
+    spec[1].forEach(function (g) { blocks += g[0]; });
+    var dataCw = TOTAL_CW[version] - ecLen * blocks;
+
+    var bb = new BitBuf();
+    bb.put(4, 4);                                  // byte mode
+    bb.put(bytes.length, version <= 9 ? 8 : 16);   // char count
+    for (var i = 0; i < bytes.length; i++) bb.put(bytes[i], 8);
+
+    var cap = dataCw * 8;
+    for (var t = 0; t < 4 && bb.bits.length < cap; t++) bb.bits.push(0); // terminator
+    while (bb.bits.length % 8 !== 0) bb.bits.push(0);
+
+    var data = [];
+    for (var b = 0; b < bb.bits.length; b += 8) {
+      var byte = 0;
+      for (var k = 0; k < 8; k++) byte = (byte << 1) | bb.bits[b + k];
+      data.push(byte);
+    }
+    var padA = 0xec, padB = 0x11, alt = 0;
+    while (data.length < dataCw) data.push(alt++ % 2 === 0 ? padA : padB);
+
+    // split into blocks, compute EC
+    var dataBlocks = [], ecBlocks = [], pos = 0;
+    spec[1].forEach(function (g) {
+      for (var n = 0; n < g[0]; n++) {
+        var blk = data.slice(pos, pos + g[1]);
+        pos += g[1];
+        dataBlocks.push(blk);
+        ecBlocks.push(rsEncode(blk, ecLen));
+      }
+    });
+
+    // interleave
+    var out = [], maxData = 0;
+    dataBlocks.forEach(function (b) { if (b.length > maxData) maxData = b.length; });
+    for (var c = 0; c < maxData; c++)
+      for (var d = 0; d < dataBlocks.length; d++)
+        if (c < dataBlocks[d].length) out.push(dataBlocks[d][c]);
+    for (var e = 0; e < ecLen; e++)
+      for (var f = 0; f < ecBlocks.length; f++) out.push(ecBlocks[f][e]);
+    return out;
+  }
+
+  // ---- matrix ----
+  function newMatrix(size) {
+    var m = [];
+    for (var i = 0; i < size; i++) m.push(new Array(size).fill(null));
+    return m;
+  }
+
+  function placeFinder(m, r, c) {
+    for (var dr = -1; dr <= 7; dr++)
+      for (var dc = -1; dc <= 7; dc++) {
+        var rr = r + dr, cc = c + dc;
+        if (rr < 0 || cc < 0 || rr >= m.length || cc >= m.length) continue;
+        var inRing = (dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6);
+        var dark = inRing && (dr === 0 || dr === 6 || dc === 0 || dc === 6 ||
+          (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+        m[rr][cc] = dark ? 1 : 0;
+      }
+  }
+
+  function placeAlignment(m, version) {
+    var centers = ALIGN[version], size = m.length;
+    for (var i = 0; i < centers.length; i++)
+      for (var j = 0; j < centers.length; j++) {
+        var r = centers[i], c = centers[j];
+        // skip the three finder corners
+        if ((r <= 8 && c <= 8) || (r <= 8 && c >= size - 9) || (r >= size - 9 && c <= 8)) continue;
+        for (var dr = -2; dr <= 2; dr++)
+          for (var dc = -2; dc <= 2; dc++) {
+            var ring = Math.max(Math.abs(dr), Math.abs(dc));
+            m[r + dr][c + dc] = (ring === 1) ? 0 : 1;
+          }
+      }
+  }
+
+  function reserveFormat(m) {
+    var size = m.length, i;
+    for (i = 0; i <= 8; i++) {
+      if (m[8][i] === null) m[8][i] = 0;
+      if (m[i][8] === null) m[i][8] = 0;
+    }
+    for (i = 0; i < 8; i++) {
+      if (m[8][size - 1 - i] === null) m[8][size - 1 - i] = 0;
+      if (m[size - 1 - i][8] === null) m[size - 1 - i][8] = 0;
+    }
+    m[size - 8][8] = 1; // dark module
+  }
+
+  function bchFormat(data) {
+    var d = data << 10;
+    for (var i = 14; i >= 10; i--)
+      if ((d >>> i) & 1) d ^= 0x537 << (i - 10);
+    return ((data << 10) | d) ^ 0x5412;
+  }
+
+  function bchVersion(version) {
+    var d = version << 12;
+    for (var i = 17; i >= 12; i--)
+      if ((d >>> i) & 1) d ^= 0x1f25 << (i - 12);
+    return (version << 12) | d;
+  }
+
+  function placeVersionInfo(m, version) {
+    if (version < 7) return;
+    var bits = bchVersion(version), size = m.length;
+    for (var i = 0; i < 18; i++) {
+      var bit = (bits >>> i) & 1;
+      var r = Math.floor(i / 3), c = i % 3;
+      m[size - 11 + c][r] = bit;
+      m[r][size - 11 + c] = bit;
+    }
+  }
+
+  function placeFormatInfo(m, mask) {
+    var bits = bchFormat((0 << 3) | mask); // ECC M = 0b00
+    var size = m.length, i;
+    function bit(n) { return (bits >>> n) & 1; }
+    // first copy: column 8 top, then row 8 leftward
+    for (i = 0; i <= 5; i++) m[i][8] = bit(i);
+    m[7][8] = bit(6);
+    m[8][8] = bit(7);
+    m[8][7] = bit(8);
+    for (i = 9; i <= 14; i++) m[8][14 - i] = bit(i);
+    // second copy: row 8 right side, then column 8 bottom
+    for (i = 0; i <= 7; i++) m[8][size - 1 - i] = bit(i);
+    for (i = 8; i <= 14; i++) m[size - 15 + i][8] = bit(i);
+    m[size - 8][8] = 1; // dark module
+  }
+
+  function maskFn(mask, r, c) {
+    switch (mask) {
+      case 0: return (r + c) % 2 === 0;
+      case 1: return r % 2 === 0;
+      case 2: return c % 3 === 0;
+      case 3: return (r + c) % 3 === 0;
+      case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+      case 5: return ((r * c) % 2) + ((r * c) % 3) === 0;
+      case 6: return (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+      case 7: return (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+    }
+  }
+
+  function penalty(m) {
+    var size = m.length, score = 0, r, c, i;
+    // rule 1: runs of 5+
+    for (r = 0; r < size; r++) {
+      var run = 1;
+      for (c = 1; c < size; c++) {
+        if (m[r][c] === m[r][c - 1]) { run++; }
+        else { if (run >= 5) score += run - 2; run = 1; }
+      }
+      if (run >= 5) score += run - 2;
+    }
+    for (c = 0; c < size; c++) {
+      var runc = 1;
+      for (r = 1; r < size; r++) {
+        if (m[r][c] === m[r - 1][c]) { runc++; }
+        else { if (runc >= 5) score += runc - 2; runc = 1; }
+      }
+      if (runc >= 5) score += runc - 2;
+    }
+    // rule 2: 2x2 blocks
+    for (r = 0; r < size - 1; r++)
+      for (c = 0; c < size - 1; c++) {
+        var v = m[r][c];
+        if (v === m[r][c + 1] && v === m[r + 1][c] && v === m[r + 1][c + 1]) score += 3;
+      }
+    // rule 3: finder-like patterns
+    var pA = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0];
+    var pB = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+    function matches(get, len, pat) {
+      var n = 0;
+      for (var s = 0; s + pat.length <= len; s++) {
+        var ok = true;
+        for (var k = 0; k < pat.length; k++) if (get(s + k) !== pat[k]) { ok = false; break; }
+        if (ok) n++;
+      }
+      return n;
+    }
+    for (r = 0; r < size; r++) {
+      (function (row) {
+        var get = function (i) { return m[row][i]; };
+        score += 40 * (matches(get, size, pA) + matches(get, size, pB));
+      })(r);
+    }
+    for (c = 0; c < size; c++) {
+      (function (col) {
+        var get = function (i) { return m[i][col]; };
+        score += 40 * (matches(get, size, pA) + matches(get, size, pB));
+      })(c);
+    }
+    // rule 4: dark ratio
+    var dark = 0;
+    for (r = 0; r < size; r++) for (c = 0; c < size; c++) if (m[r][c]) dark++;
+    var pct = (dark * 100) / (size * size);
+    score += 10 * Math.floor(Math.abs(pct - 50) / 5);
+    return score;
+  }
+
+  function encode(text, forceMask) {
+    var bytes = utf8Bytes(text);
+    var version = pickVersion(bytes.length);
+    var codewords = buildCodewords(bytes, version);
+    var size = version * 4 + 17;
+
+    var base = newMatrix(size);
+    placeFinder(base, 0, 0);
+    placeFinder(base, 0, size - 7);
+    placeFinder(base, size - 7, 0);
+    placeAlignment(base, version);
+    for (var i = 8; i < size - 8; i++) {         // timing
+      if (base[6][i] === null) base[6][i] = i % 2 === 0 ? 1 : 0;
+      if (base[i][6] === null) base[i][6] = i % 2 === 0 ? 1 : 0;
+    }
+    placeVersionInfo(base, version);
+    var reserved = [];
+    for (var r = 0; r < size; r++) reserved.push(base[r].slice());
+    reserveFormat(reserved); // marks format areas as non-null => function modules
+
+    // zigzag data placement
+    var best = null, bestScore = Infinity;
+    for (var mask = 0; mask < 8; mask++) {
+      if (forceMask != null && mask !== forceMask) continue;
+      var m = [];
+      for (var rr = 0; rr < size; rr++) m.push(reserved[rr].slice());
+      var bit = 0, upward = true;
+      for (var col = size - 1; col >= 0; col -= 2) {
+        if (col === 6) col--; // skip vertical timing column
+        for (var n = 0; n < size; n++) {
+          var row = upward ? size - 1 - n : n;
+          for (var k = 0; k < 2; k++) {
+            var cc = col - k;
+            if (m[row][cc] !== null) continue;
+            var v = 0;
+            if (bit < codewords.length * 8) {
+              v = (codewords[bit >> 3] >>> (7 - (bit & 7))) & 1;
+            }
+            bit++;
+            if (maskFn(mask, row, cc)) v ^= 1;
+            m[row][cc] = v;
+          }
+        }
+        upward = !upward;
+      }
+      placeFormatInfo(m, mask);
+      var s = penalty(m);
+      if (s < bestScore) { bestScore = s; best = m; }
+    }
+    return best;
+  }
+
+  function toSvg(text, opts) {
+    opts = opts || {};
+    var quiet = opts.quiet == null ? 4 : opts.quiet;
+    var m = encode(text);
+    var size = m.length, total = size + quiet * 2;
+    var dark = opts.dark || '#000', light = opts.light || '#fff';
+    var path = '';
+    for (var r = 0; r < size; r++)
+      for (var c = 0; c < size; c++)
+        if (m[r][c]) path += 'M' + (c + quiet) + ' ' + (r + quiet) + 'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + total + ' ' + total +
+      '" shape-rendering="crispEdges" role="img" aria-label="QR code">' +
+      '<rect width="' + total + '" height="' + total + '" fill="' + light + '"/>' +
+      '<path d="' + path + '" fill="' + dark + '"/></svg>';
+  }
+
+  var api = { encode: encode, toSvg: toSvg };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else global.QR = api;
+})(typeof window !== 'undefined' ? window : this);
+
+
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+var INDUSTRIES = [
+  { id:"home",    ic:"🏠", t:"Home Services",        s:"HVAC, plumbing, electrical, roofing" },
+  { id:"medical", ic:"🩺", t:"Medical / Wellness",   s:"Practices, dental, med spa, therapy"  },
+  { id:"pro",     ic:"📁", t:"Professional Services",s:"Legal, accounting, insurance"         },
+  { id:"realty",  ic:"🔑", t:"Real Estate",          s:"Agents, brokers, property management" },
+  { id:"coach",   ic:"🎯", t:"Coaching / Consulting",s:"Coaches, agencies, advisors"          },
+  { id:"trades",  ic:"🔧", t:"Trades / Contractors", s:"GC, remodel, concrete, landscape"     },
+  { id:"retail",  ic:"🛍️", t:"Local Retail / Food",  s:"Shops, restaurants, studios"          },
+  { id:"other",   ic:"✨", t:"Something Else",       s:"Everything not on this list"          }
+];
+
+var BOTTLENECKS = [
+  { id:"leads",     ic:"📞", t:"Leads slip away",        s:"They reach out, nobody answers fast enough" },
+  { id:"followup",  ic:"🔁", t:"Follow-up is spotty",    s:"Quotes and proposals go quiet"              },
+  { id:"scheduling",ic:"📅", t:"Scheduling &amp; no-shows", s:"Booking ping-pong and empty slots"       },
+  { id:"admin",     ic:"🗂️", t:"Drowning in admin",      s:"Paperwork, inbox, repetitive questions"     },
+  { id:"reviews",   ic:"⭐", t:"Not enough reviews",      s:"Great work, thin online proof"             },
+  { id:"retention", ic:"🔔", t:"Past customers go quiet", s:"An old list nobody is working"             }
+];
+
+var SYSTEMS = {
+  leads: {
+    name:"AI Lead Response Agent",
+    does:[
+      "Answers every call, text, and form fill in under a minute — around the clock",
+      "Asks your qualifying questions before it books anything",
+      "Puts the job straight into your calendar",
+      "Texts back the ones who don't pick up, and keeps the thread alive",
+      "Pings your team with a clean summary so nobody re-asks"
+    ],
+    measure:["Speed to first response","% of inbound that gets a reply","Booked-from-inbound rate"]
+  },
+  followup: {
+    name:"AI Follow-Up Sequencer",
+    does:[
+      "Runs a multi-touch sequence over text and email without anyone remembering to",
+      "References what they actually asked about, not a generic blast",
+      "Keeps going past touch three, where humans quit",
+      "Stops the second they reply or book",
+      "Hands a live conversation to you with the full history attached"
+    ],
+    measure:["Touches per opportunity","Reply rate by touch","Close rate on aged leads"]
+  },
+  scheduling: {
+    name:"AI Booking &amp; Reminder Agent",
+    does:[
+      "Handles the back-and-forth and locks the slot",
+      "Sends confirmations and staged reminders automatically",
+      "Offers a reschedule link instead of taking a no-show",
+      "Fills cancellations from a waitlist before the slot goes cold",
+      "Keeps your calendar as the one source of truth"
+    ],
+    measure:["No-show rate","Time from inquiry to booked","Admin hours spent scheduling"]
+  },
+  admin: {
+    name:"AI Front-Desk Assistant",
+    does:[
+      "Answers the same repeated questions instantly, in your voice",
+      "Drafts routine emails, recaps, and updates for you to approve",
+      "Captures notes and documents and files them where they belong",
+      "Escalates anything unusual to a human instead of guessing",
+      "Works the hours you're closed"
+    ],
+    measure:["Hours returned per week","Response time on routine requests","How old your backlog gets"]
+  },
+  reviews: {
+    name:"AI Review Engine",
+    does:[
+      "Asks at the exact moment the customer is happiest",
+      "Sends happy customers to public review, unhappy ones to you privately first",
+      "Follows up once if they meant to and forgot",
+      "Drafts replies to new reviews in your voice for approval",
+      "Makes the ask happen on every job, not the ones someone remembers"
+    ],
+    measure:["Reviews per month","Average rating","% of jobs that get an ask"]
+  },
+  retention: {
+    name:"AI Database Reactivation",
+    does:[
+      "Wakes up the list you already own with a relevant, personal-feeling offer",
+      "Handles the replies conversationally instead of blasting and hoping",
+      "Segments by what they bought and how long it's been",
+      "Books the ones who are ready and nurtures the ones who aren't",
+      "Runs as a campaign you can repeat every quarter"
+    ],
+    measure:["Revenue from existing customers","Reactivation rate","Cost per booked job vs. paid ads"]
+  }
+};
+
+var LEAKS = {
+  home: {
+    leads:"When someone's AC dies at 6pm on a Friday, they call three companies and book whoever answers first.",
+    followup:"Estimates over a few thousand dollars rarely close on the first visit — and most shops send exactly one follow-up.",
+    scheduling:"Every reschedule and “is the tech still coming?” call eats dispatch time you're already paying for.",
+    admin:"Job notes, invoices, and permit paperwork pile up on whoever happens to be closest to the desk.",
+    reviews:"Techs finish the job and drive off. The review ask never happens, even when the customer was thrilled.",
+    retention:"You have years of one-time repair customers who were never offered a maintenance plan."
+  },
+  medical: {
+    leads:"New-patient inquiries land after hours and sit until morning. By then they've booked with whoever picked up.",
+    followup:"Treatment plans get presented once. The patients who say “let me think about it” rarely hear from you again.",
+    scheduling:"No-shows and late cancellations leave chair time empty that you can't resell fast enough.",
+    admin:"Intake forms, insurance verification, and recalls eat your front desk's entire day.",
+    reviews:"Happy patients are your best marketing, and almost none of them are asked at the right moment.",
+    retention:"Patients who lapsed a year ago are the cheapest appointments you will ever book."
+  },
+  pro: {
+    leads:"Someone with a problem calls three firms. The one that responds first usually gets the consult.",
+    followup:"Proposals go out and go quiet, because nobody on the team owns the seventh touch.",
+    scheduling:"Consultation ping-pong burns days before the client is ever actually on your calendar.",
+    admin:"Intake, document chasing, and status-update emails are billable hours you're giving away.",
+    reviews:"Referrals are your channel, but your online proof doesn't match your real reputation.",
+    retention:"Last year's clients need this year's work, and nobody reaches out until they've gone elsewhere."
+  },
+  realty: {
+    leads:"Portal leads go cold in minutes. Speed to first response decides who gets the showing.",
+    followup:"Most deals live in the three-to-eighteen-month window — which is exactly where follow-up dies.",
+    scheduling:"Showing coordination and confirmations eat the hours you should spend in front of people.",
+    admin:"Disclosures, deadlines, and transaction updates keep you in your inbox instead of on appointments.",
+    reviews:"Every closing is a five-star moment that passes without anyone asking.",
+    retention:"Past clients move again and refer constantly — if you're still in front of them when it happens."
+  },
+  coach: {
+    leads:"Inbound interest arrives warm and cools fast while you're inside a client session.",
+    followup:"Discovery calls that don't close get one email and then disappear forever.",
+    scheduling:"Rescheduling and time-zone tetris quietly costs you about a session a week.",
+    admin:"Session notes, recaps, and accountability check-ins are the first thing to slip when you get busy.",
+    reviews:"Client wins happen constantly and almost none of them become public proof.",
+    retention:"People who finished a program are the warmest audience you will ever have, and most go untouched."
+  },
+  trades: {
+    leads:"Missed calls while you're on a ladder are the single biggest leak in the trades.",
+    followup:"Bids go out, and the ones nobody chases go to whoever followed up twice.",
+    scheduling:"Crew schedules shift daily, and every change means another round of phone calls.",
+    admin:"Change orders, invoices, and material lists get handled at 9pm after a full day on site.",
+    reviews:"The best time to ask is at walkthrough — which is exactly when everyone is packing up.",
+    retention:"Homeowners you served three years ago have a new project and no reason to remember your name."
+  },
+  retail: {
+    leads:"Messages come in across five different apps and get answered late, or not at all.",
+    followup:"Someone asks about an item or a party booking, hears nothing back, and buys somewhere else.",
+    scheduling:"Reservations and bookings get handled by whoever's free, which means inconsistently.",
+    admin:"Ordering, staff scheduling, and answering the same twelve questions eats your manager's shift.",
+    reviews:"Your best customers would leave five stars if anyone asked them at the right time.",
+    retention:"Regulars drift away quietly, and nobody notices until the month comes in down."
+  },
+  other: {
+    leads:"Every business has a moment where someone raises their hand. Most lose them in the gap before anyone responds.",
+    followup:"The money is almost never in the first touch. It's in touches three through eight, which rarely happen.",
+    scheduling:"Booking back-and-forth is invisible work that quietly consumes your week.",
+    admin:"The repetitive 20% of your day is almost always the part a system should be doing.",
+    reviews:"Social proof compounds, and most businesses only collect it by accident.",
+    retention:"The cheapest revenue in any business is the customer you already earned once."
+  }
+};
+
+/* ============================================================
+   APP
+   ============================================================ */
+(function(){
+  "use strict";
+  var $ = function(s){ return document.querySelector(s); };
+  var state = { first:"", company:"", email:"", industry:null, bottleneck:null, muted:false, leadIndex:null };
+  var LS_LEADS = "vicron_booth_leads_v2";
+  var LS_MUTE  = "vicron_booth_muted_v1";
+
+  /* ---------- branding ---------- */
+  $("#brandName").textContent = CONFIG.brandName;
+  $("#cohost").textContent = CONFIG.cohost;
+  Array.prototype.forEach.call(document.querySelectorAll(".coachName"), function(el){
+    el.textContent = CONFIG.coachName;
+  });
+
+  /* ---------- audio ----------
+     Pre-generated ElevenLabs clips play through one shared <audio>. If a clip is
+     missing or blocked, we fall back to the browser's own voice so the booth
+     never goes silent. */
+  var player = new Audio();
+  player.preload = "auto";
+  var synth = window.speechSynthesis;
+
+  function stopSpeaking(){
+    try { player.pause(); player.currentTime = 0; } catch(e){}
+    try { synth && synth.cancel(); } catch(e){}
+  }
+
+  function fallbackSpeak(text){
+    if (!synth || !text) return;
+    try {
+      synth.cancel();
+      var u = new SpeechSynthesisUtterance(String(text).replace(/&amp;/g,"and"));
+      u.rate = 1.02;
+      synth.speak(u);
+    } catch(e){}
+  }
+
+  function say(src, fallbackText){
+    if (!CONFIG.voice || state.muted) return;
+    stopSpeaking();
+    if (!src){ fallbackSpeak(fallbackText); return; }
+    player.src = src;
+    var p = player.play();
+    if (p && p.catch) p.catch(function(){ fallbackSpeak(fallbackText); });
+  }
+
+  state.muted = localStorage.getItem(LS_MUTE) === "1";
+  function renderMute(){
+    $("#muteBtn").innerHTML = state.muted ? "🔇 <span>Voice off</span>" : "🔊 <span>Voice on</span>";
+  }
+  renderMute();
+  $("#muteBtn").addEventListener("click", function(){
+    state.muted = !state.muted;
+    localStorage.setItem(LS_MUTE, state.muted ? "1" : "0");
+    avatar.muted = state.muted;
+    if (state.muted) stopSpeaking();
+    renderMute();
+  });
+
+  /* ---------- avatar ---------- */
+  var avatar = $("#avatar");
+  var replayBtn = $("#replayBtn");
+  document.documentElement.style.setProperty("--avatar-aspect", CONFIG.avatarAspect || "1/1");
+  avatar.src = CONFIG.avatarVideo;
+  avatar.addEventListener("ended", function(){ replayBtn.classList.add("show"); });
+  function playAvatar(){
+    replayBtn.classList.remove("show");
+    avatar.muted = state.muted;
+    try { avatar.currentTime = 0; } catch(e){}
+    var p = avatar.play();
+    // if autoplay-with-sound is refused, show the still and let them tap replay
+    if (p && p.catch) p.catch(function(){ replayBtn.classList.add("show"); });
+  }
+  replayBtn.addEventListener("click", playAvatar);
+  avatar.addEventListener("click", function(){ if (avatar.paused) playAvatar(); });
+
+  /* ---------- screens ---------- */
+  var current = "attract";
+  function show(name){
+    stopSpeaking();
+    if (name !== "lead"){ try { avatar.pause(); } catch(e){} }
+    Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
+      s.classList.remove("active");
+    });
+    $("#s-" + name).classList.add("active");
+    current = name;
+    resetIdle();
+  }
+
+  /* ---------- idle reset ---------- */
+  var idleTimer = null;
+  function resetIdle(){
+    clearTimeout(idleTimer);
+    if (current === "attract") return;
+    idleTimer = setTimeout(fullReset, CONFIG.idleResetSeconds * 1000);
+  }
+  function fullReset(){
+    state.first = ""; state.company = ""; state.email = "";
+    state.industry = null; state.bottleneck = null; state.leadIndex = null;
+    $("#f-first").value = ""; $("#f-company").value = ""; $("#f-email").value = "";
+    $("#formErr").textContent = "";
+    $("#eyebrowIndustry").textContent = "Question 1 of 2";
+    $("#resultEyebrow").textContent = "Your first AI system";
+    try { avatar.pause(); avatar.currentTime = 0; } catch(e){}
+    replayBtn.classList.remove("show");
+    show("attract");
+  }
+  ["click","touchstart","keydown","mousemove"].forEach(function(ev){
+    document.addEventListener(ev, resetIdle, {passive:true});
+  });
+
+  /* ---------- option grids ---------- */
+  function buildGrid(el, items, onPick){
+    el.innerHTML = "";
+    items.forEach(function(it){
+      var b = document.createElement("button");
+      b.className = "opt";
+      b.innerHTML = '<span class="ic">' + it.ic + '</span>' +
+                    '<span class="t">' + it.t + '</span>' +
+                    '<span class="s">' + it.s + '</span>';
+      b.addEventListener("click", function(){ onPick(it); });
+      el.appendChild(b);
+    });
+  }
+  buildGrid($("#industryGrid"), INDUSTRIES, function(it){
+    state.industry = it.id;
+    show("bottleneck");
+    say(CONFIG.audio.bottleneck, "Got it. And if you had to pick one headache right now, which one is it?");
+  });
+  buildGrid($("#bottleneckGrid"), BOTTLENECKS, function(it){
+    state.bottleneck = it.id;
+    renderResult();
+  });
+
+  /* ---------- QR ---------- */
+  function qrLink(){
+    var url = CONFIG.snapshotUrl;
+    if (CONFIG.tagQrWithAnswers && state.industry && state.bottleneck){
+      url += (url.indexOf("?") === -1 ? "?" : "&") + "i=" + state.industry + "&b=" + state.bottleneck;
+    }
+    return url;
+  }
+  function paintQR(el){
+    try {
+      el.innerHTML = window.QR.toSvg(qrLink(), { dark:"#070b14", light:"#ffffff", quiet:2 });
+    } catch(e){
+      el.innerHTML = '<div style="color:#070b14;font:600 13px/1.4 sans-serif;padding:8px">' + qrLink() + '</div>';
+    }
+  }
+
+  /* ---------- result ---------- */
+  function decode(html){ var d = document.createElement("textarea"); d.innerHTML = html; return d.value; }
+
+  function renderResult(){
+    var sys = SYSTEMS[state.bottleneck];
+    var leak = (LEAKS[state.industry] || LEAKS.other)[state.bottleneck];
+
+    $("#resultEyebrow").textContent = state.first
+      ? "Alright " + state.first + " — your first AI system"
+      : "Your first AI system";
+    $("#sysName").innerHTML = sys.name;
+    $("#leakLine").textContent = leak;
+
+    var ul = $("#doesList"); ul.innerHTML = "";
+    sys.does.forEach(function(d){
+      var li = document.createElement("li"); li.innerHTML = d; ul.appendChild(li);
+    });
+
+    var chips = $("#measureChips"); chips.innerHTML = "";
+    sys.measure.forEach(function(m){
+      var s = document.createElement("span"); s.className = "chip"; s.textContent = m; chips.appendChild(s);
+    });
+
+    paintQR($("#qrResult"));
+    completeLead();
+    show("result");
+    say(CONFIG.audio[state.bottleneck],
+        "Based on that, your first AI system should probably be " + decode(sys.name) +
+        ". " + CONFIG.coachName + " can map this into a full AI Systems Snapshot — go grab him.");
+  }
+
+  /* ---------- leads ---------- */
+  function loadLeads(){
+    try { return JSON.parse(localStorage.getItem(LS_LEADS) || "[]"); } catch(e){ return []; }
+  }
+  function writeLeads(all){
+    try { localStorage.setItem(LS_LEADS, JSON.stringify(all)); } catch(e){}
+  }
+  // Captured the moment they submit the form, so someone who wanders off
+  // mid-audit is still a lead. The answers get filled in later if they finish.
+  function captureLead(){
+    var all = loadLeads();
+    all.push({
+      at: new Date().toISOString(),
+      first: state.first, company: state.company, email: state.email,
+      industry: "", bottleneck: "", system: "", completed: false
+    });
+    state.leadIndex = all.length - 1;
+    writeLeads(all);
+  }
+  function completeLead(){
+    if (state.leadIndex == null) return;
+    var all = loadLeads();
+    var lead = all[state.leadIndex];
+    if (!lead || lead.email !== state.email) return;   // list changed under us; leave it alone
+    lead.industry = state.industry;
+    lead.bottleneck = state.bottleneck;
+    lead.system = decode(SYSTEMS[state.bottleneck] ? SYSTEMS[state.bottleneck].name : "");
+    lead.completed = true;
+    writeLeads(all);
+  }
+
+  /* ---------- flow ---------- */
+  $("#startBtn").addEventListener("click", function(){
+    show("lead");
+    playAvatar();   // the click is the user gesture that unlocks audio
+  });
+
+  $("#leadNext").addEventListener("click", function(){
+    var first = $("#f-first").value.trim();
+    var company = $("#f-company").value.trim();
+    var email = $("#f-email").value.trim();
+
+    if (!first)   { $("#formErr").textContent = "Just your first name is fine."; return; }
+    if (!company) { $("#formErr").textContent = "What's the business called?"; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      $("#formErr").textContent = "That email doesn't look right.";
+      return;
+    }
+    $("#formErr").textContent = "";
+    state.first = first; state.company = company; state.email = email;
+    captureLead();
+
+    $("#eyebrowIndustry").textContent = "Question 1 of 2 · Thanks, " + first;
+    show("industry");
+    say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
+  });
+
+  $("#againBtn").addEventListener("click", fullReset);
+
+  /* ---------- admin ---------- */
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+  }); }
+
+  function renderAdmin(){
+    var all = loadLeads();
+    if (!all.length){ $("#leadTable").innerHTML = '<p class="muted" style="margin-top:24px">No leads captured yet.</p>'; return; }
+    var rows = all.map(function(l){
+      var answers = l.completed ? (esc(l.industry) + " / " + esc(l.bottleneck))
+                                : "<span class='muted'>didn't finish</span>";
+      return "<tr><td>" + new Date(l.at).toLocaleString() + "</td><td><strong>" + esc(l.first) +
+             "</strong><br><span class='muted'>" + esc(l.company) + "</span></td><td>" + esc(l.email) +
+             "</td><td>" + answers + "</td><td>" + esc(l.system) + "</td></tr>";
+    }).join("");
+    var done = all.filter(function(l){ return l.completed; }).length;
+    $("#leadTable").innerHTML = "<p class='muted' style='margin-top:22px'>" + all.length +
+      " captured · " + done + " finished the audit</p><table><thead><tr><th>When</th><th>Who</th><th>Email</th><th>Answers</th><th>System</th></tr></thead><tbody>" +
+      rows + "</tbody></table>";
+  }
+
+  // After swapping in new avatar/voice files, this confirms every one actually loads.
+  function checkMedia(){
+    var box = $("#mediaCheck");
+    var items = [{k:"avatar video", p:CONFIG.avatarVideo}];
+    Object.keys(CONFIG.audio).forEach(function(k){ items.push({k:k, p:CONFIG.audio[k]}); });
+    box.innerHTML = "<p class='muted' style='margin-top:26px'>Checking media…</p>";
+    Promise.all(items.map(function(it){
+      return fetch(it.p, {method:"HEAD"})
+        .then(function(r){ return {k:it.k, p:it.p, ok:r.ok, size:+(r.headers.get("content-length")||0)}; })
+        .catch(function(){ return {k:it.k, p:it.p, ok:false, size:0}; });
+    })).then(function(res){
+      var bad = res.filter(function(r){ return !r.ok; }).length;
+      box.innerHTML =
+        "<h2 style='margin:26px 0 4px;font-size:22px'>Media</h2>" +
+        "<p class='muted'>" + (bad ? bad + " file(s) missing — the browser voice will cover those lines."
+                                   : "All " + res.length + " files load.") + "</p>" +
+        "<table><tbody>" + res.map(function(r){
+          return "<tr><td>" + (r.ok ? "✅" : "❌") + "</td><td>" + esc(r.k) +
+                 "</td><td class='muted'>" + esc(r.p) + "</td><td class='muted'>" +
+                 (r.ok ? Math.round(r.size/1024) + " KB" : "not found") + "</td></tr>";
+        }).join("") + "</tbody></table>";
+    });
+  }
+
+  function openAdmin(){ $("#admin").hidden = false; renderAdmin(); checkMedia(); }
+  $("#closeAdmin").addEventListener("click", function(){ $("#admin").hidden = true; });
+  $("#clearBtn").addEventListener("click", function(){
+    if (confirm("Delete every captured lead on this device? Export first if you haven't.")){
+      localStorage.removeItem(LS_LEADS); renderAdmin();
+    }
+  });
+  $("#exportBtn").addEventListener("click", function(){
+    var all = loadLeads();
+    if (!all.length){ alert("Nothing to export yet."); return; }
+    var head = ["captured_at","first_name","company","email","industry","bottleneck","recommended_system","finished_audit"];
+    var lines = [head.join(",")];
+    all.forEach(function(l){
+      lines.push([l.at,l.first,l.company,l.email,l.industry,l.bottleneck,l.system,l.completed?"yes":"no"].map(function(v){
+        return '"' + String(v == null ? "" : v).replace(/"/g,'""') + '"';
+      }).join(","));
+    });
+    var blob = new Blob([lines.join("\r\n")], {type:"text/csv;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "booth-leads-" + new Date().toISOString().slice(0,10) + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  });
+
+  document.addEventListener("keydown", function(e){
+    if (e.key === "a" || e.key === "A"){
+      if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      openAdmin();
+    }
+    if (e.key === "Escape"){ $("#admin").hidden = true; }
+  });
+  // triple-tap the top-left corner opens admin on a touchscreen
+  (function(){
+    var taps = 0, t = null;
+    document.addEventListener("touchstart", function(e){
+      var x = e.touches[0].clientX, y = e.touches[0].clientY;
+      if (x > 110 || y > 110) { taps = 0; return; }
+      taps++; clearTimeout(t); t = setTimeout(function(){ taps = 0; }, 900);
+      if (taps >= 3){ taps = 0; openAdmin(); }
+    }, {passive:true});
+  })();
+
+  if (location.search.indexOf("admin=1") !== -1) openAdmin();
+
+  // warm the QR so the code is ready before anyone touches the screen
+  paintQR($("#qrResult"));
+})();
+</script>
+</body>
+</html>
