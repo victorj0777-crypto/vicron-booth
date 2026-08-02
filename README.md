@@ -151,7 +151,7 @@ One `CONFIG` block at the top of the `<script>` in `index.html`:
 
 | Key | Notes |
 |---|---|
-| `snapshotUrl` | **Set this before the event.** Drives every QR code. |
+| `snapshotUrl` | Set to `https://aiemployee.victornegron.com`. Drives every QR code — keep it in sync with the copy in `handout.html`. |
 | `tagQrWithAnswers` | Appends `?i=<industry>&b=<bottleneck>` so a scan tells you what they picked. |
 | `avatarVideo`, `audio` | Paths to the media. Swap files here to change her or her voice. |
 | `avatarAspect` | Shape of the avatar frame — `"1/1"`, `"16/9"`, or `"9/16"`. Match your clip or she gets cropped. |
@@ -182,7 +182,8 @@ and leave the numbers to you. A real number from a Tampa client will beat any ge
 
 ## Pre-event checklist
 
-- [ ] `snapshotUrl` set to a real, tested link
+- [ ] **Publish a page at `https://aiemployee.victornegron.com`** — DNS and SSL are live, but it
+      returns 404 today, so every QR is a dead end until something is there
 - [ ] Scan every QR with your own phone — result screen and the printed handout
 - [ ] Play one full pass at booth volume; confirm she's audible over room noise
 - [ ] External speaker if the room is loud — laptop speakers will lose
