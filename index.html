@@ -219,8 +219,9 @@
   .voicepanel{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:var(--r);padding:clamp(20px,2.2vw,32px);box-shadow:0 30px 80px -50px rgba(0,0,0,.9)}
   .embedbox{margin-top:14px;border:1px dashed color-mix(in srgb,var(--accent-2) 45%,transparent);border-radius:18px;min-height:clamp(135px,17vw,205px);display:grid;place-items:center;text-align:center;padding:18px;background:rgba(255,255,255,.035)}
   .embedbox code{display:block;margin-top:10px;color:var(--accent);font-size:12px;white-space:normal}
-  body.voice-mode chat-widget{position:fixed!important;left:clamp(42px,8vw,110px)!important;bottom:18px!important;z-index:12!important;transform:scale(.72);transform-origin:bottom left}
-  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;transform:translateX(-50%) scale(.62);bottom:8px!important}}
+  body:not(.voice-mode) chat-widget{display:none!important}
+  body.voice-mode chat-widget{position:fixed!important;left:clamp(64px,10vw,150px)!important;bottom:24px!important;z-index:12!important;transform:scale(.58);transform-origin:bottom left}
+  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;transform:translateX(-50%) scale(.54);bottom:8px!important}}
   @keyframes orbFloat{0%,100%{transform:translateY(-10px)}50%{transform:translateY(12px)}}
   @keyframes orbGlow{from{filter:saturate(1)}to{filter:saturate(1.25) brightness(1.08)}}
   @keyframes orbRing{to{transform:rotate(360deg)}}
@@ -1032,6 +1033,7 @@ var LEAKS = {
   var current = "attract";
   function show(name){
     stopSpeaking();
+    document.body.classList.toggle("voice-mode", name === "lead");
     if (name !== "lead"){ try { avatar && avatar.pause(); } catch(e){} }
     Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
       s.classList.remove("active");

@@ -51,7 +51,7 @@ can die without the kiosk noticing. Verified by killing the server and reloading
 the avatar video, and every voice line still served.
 
 **One rule:** if you change kiosk HTML/CSS, swap media, or add the voice embed, bump `CACHE`
-in `sw.js` (currently `vicron-booth-v7`). Otherwise booth devices can keep serving stale
+in `sw.js` (currently `vicron-booth-v8`). Otherwise booth devices can keep serving stale
 cached files. The service worker deliberately never caches `/api/`, so the lead endpoint is
 always live.
 
