@@ -2,8 +2,8 @@
 
 | File | What it is |
 |---|---|
-| `index.html` | **Public landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
-| `booth.html` | **The kiosk.** Attract → avatar asks who you are → 2 questions → tailored result + QR. |
+| `index.html` | **The AI employee.** Lives at the root of the domain. Attract → avatar asks who you are → 2 questions → tailored result + QR. Leads go to your CRM *and* the device. |
+| `snapshot.html` | Plain lead form + calendar, for anyone who'd rather not run the audit. |
 | `handout.html` | The one-page AI Systems Checklist. Open it and print / save as PDF. |
 | `api/lead.js` | Receives the landing-page form and forwards it to your CRM. |
 | `SETUP-CRM-AND-CALENDAR.md` | **Start here.** The two links you still need to fill in. |
@@ -20,8 +20,8 @@ cd ~/Downloads/vicron-booth && npm start
 ```
 
 Then:
-- **http://localhost:8731/booth.html** — the kiosk. `Cmd`+`Ctrl`+`F` for fullscreen.
-- **http://localhost:8731/** — the public landing page prospects land on.
+- **http://localhost:8731/** — the AI employee. `Cmd`+`Ctrl`+`F` for fullscreen at the booth.
+- **http://localhost:8731/snapshot.html** — the plain form + calendar page.
 
 Serve it over localhost rather than double-clicking the file — `file://` blocks media
 autoplay and the microphone. No build step, no npm, no API keys. Once loaded it runs
@@ -33,12 +33,14 @@ fully offline: the avatar and every voice line are local files.
 
 The repo is private. Two audiences share one domain:
 
-- **`/` — the landing page.** Public. Prospects scan a QR and land here. Its form posts to
-  `/api/lead`, which forwards to your CRM, then shows your calendar. See
-  `SETUP-CRM-AND-CALENDAR.md` for the two links that still need filling in.
-- **`/booth.html` — the kiosk.** Runs on *your* device at the booth. Its leads stay in that
-  device's `localStorage` and export to CSV, which is deliberate: a local-first capture
-  can't be lost to bad venue wifi.
+**`/` is the AI employee** — the same experience whether it's running on your booth screen or
+on a prospect's phone after they scan. Because it's public now, every lead posts to `/api/lead`
+(which forwards to your CRM) *and* saves to that device's `localStorage`. Belt and braces: the
+CRM copy is the one you'll work from, the local copy survives a dead venue connection and
+still exports to CSV.
+
+Set `CRM_WEBHOOK_URL` in Vercel or the CRM half does nothing — see
+`SETUP-CRM-AND-CALENDAR.md`.
 
 A hosted URL normally means "no internet, no booth." A service worker (`sw.js`) fixes that:
 after one successful load on the booth device, everything runs from cache and the venue wifi
@@ -46,7 +48,7 @@ can die without the kiosk noticing. Verified by killing the server and reloading
 the avatar video, and every voice line still served.
 
 **One rule:** if you swap the avatar or any voice line, bump `CACHE` in `sw.js`
-(currently `vicron-booth-v2` → make it `-v3`). Otherwise booth devices keep serving the old
+(currently `vicron-booth-v3` → make it `-v4`). Otherwise booth devices keep serving the old
 media from cache forever. The service worker deliberately never caches `/` or `/api/`, so the
 public page and the lead endpoint are always live.
 
@@ -160,8 +162,8 @@ and the landing page has no device to fall back on.
 
 ## Config
 
-The kiosk's `CONFIG` block sits at the top of the `<script>` in `booth.html`
-(the landing page has its own, smaller one in `index.html`):
+The AI employee's `CONFIG` block sits at the top of the `<script>` in `index.html`
+(`snapshot.html` has its own, smaller one):
 
 | Key | Notes |
 |---|---|

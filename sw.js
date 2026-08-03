@@ -5,10 +5,11 @@
 
    Bump CACHE when you swap the avatar or any voice line, or the booth will keep
    serving the old media from cache. */
-var CACHE = "vicron-booth-v2";
+var CACHE = "vicron-booth-v3";
 
 var ASSETS = [
-  "./booth.html",
+  "./",
+  "./index.html",
   "./handout.html",
   "./assets/avatar.mp4",
   "./assets/avatar-poster.jpg",
@@ -54,11 +55,11 @@ self.addEventListener("fetch", function (e) {
   var url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
 
-  // Never touch the lead endpoint or the public landing page. Those must always
-  // hit the network: one is an API, the other is the page prospects see and the
-  // one most likely to be edited.
+  // The lead endpoint must always hit the network -- a cached POST response
+  // would be meaningless, and a lead has to reach the CRM. /snapshot.html is
+  // the separate form page and is edited often, so it stays live too.
   if (url.pathname.indexOf("/api/") === 0) return;
-  if (url.pathname === "/" || url.pathname === "/index.html") return;
+  if (url.pathname === "/snapshot.html") return;
 
   e.respondWith(
     caches.match(e.request).then(function (hit) {
