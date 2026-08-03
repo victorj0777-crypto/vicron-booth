@@ -2,8 +2,9 @@
 
 | File | What it is |
 |---|---|
-| `index.html` | **Public landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
-| `booth.html` | **The kiosk.** Attract → avatar asks who you are → 2 questions → tailored result + QR. |
+| `index.html` | **Root kiosk page.** Same live AI employee booth experience as `booth.html`, so the custom domain opens the booth. |
+| `booth.html` | **The kiosk backup URL.** Attract → 2 questions → tailored result + end-of-flow capture + QR. |
+| `snapshot.html` | **Public snapshot landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
 | `handout.html` | The one-page AI Systems Checklist. Open it and print / save as PDF. |
 | `api/lead.js` | Receives the landing-page form and forwards it to your CRM. |
 | `SETUP-CRM-AND-CALENDAR.md` | **Start here.** The two links you still need to fill in. |
@@ -20,8 +21,9 @@ cd ~/Downloads/vicron-booth && npm start
 ```
 
 Then:
-- **http://localhost:8731/booth.html** — the kiosk. `Cmd`+`Ctrl`+`F` for fullscreen.
-- **http://localhost:8731/** — the public landing page prospects land on.
+- **http://localhost:8731/** — the root kiosk, matching the custom domain.
+- **http://localhost:8731/booth.html** — backup kiosk URL.
+- **http://localhost:8731/snapshot.html** — the public snapshot page prospects land on from QR.
 
 Serve it over localhost rather than double-clicking the file — `file://` blocks media
 autoplay and the microphone. No build step, no npm, no API keys. Once loaded it runs

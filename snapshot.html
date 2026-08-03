@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free AI Systems Snapshot — Vicron AI</title>
+<meta name="description" content="Three places AI could save you time or recover revenue, specific to your business.">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --accent:#3ddc97; --accent-2:#4cc9f0;
+    --bg:#070b14; --panel:#0f1626; --ink:#f2f6ff;
+    --muted:#93a3c0; --line:rgba(255,255,255,.10); --r:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;
+  }
+  .bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .bg::before{
+    content:"";position:absolute;inset:-30%;
+    background:
+      radial-gradient(closest-side at 20% 12%, color-mix(in srgb,var(--accent) 22%,transparent), transparent 70%),
+      radial-gradient(closest-side at 85% 80%, color-mix(in srgb,var(--accent-2) 18%,transparent), transparent 70%);
+    filter:blur(50px);
+  }
+  .wrap{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:clamp(26px,6vw,60px) clamp(18px,5vw,28px) 60px}
+
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;font-size:12px;margin-bottom:clamp(26px,6vw,44px)}
+  .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 20px color-mix(in srgb,var(--accent) 65%,transparent)}
+  .brand .sep{color:var(--muted);font-weight:600}
+
+  .eyebrow{color:var(--accent);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:12px;margin:0 0 12px}
+  h1{font-size:clamp(32px,7.5vw,50px);line-height:1.03;letter-spacing:-.03em;margin:0 0 16px;font-weight:850}
+  h1 .grad{background:linear-gradient(100deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:clamp(16px,4vw,19px);color:var(--muted);margin:0}
+
+  .recap{
+    display:none;margin:22px 0 0;padding:16px 18px;border-radius:var(--r);
+    background:var(--panel);border:1px solid var(--line);font-size:15px;
+  }
+  .recap.show{display:block}
+  .recap b{color:var(--ink)}
+  .recap span{color:var(--muted)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+    padding:clamp(20px,5vw,30px);margin-top:clamp(24px,6vw,34px)}
+  h2{font-size:clamp(20px,4.6vw,26px);line-height:1.15;letter-spacing:-.02em;margin:0 0 6px;font-weight:840}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 20px}
+
+  .field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+  label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  label .opt{text-transform:none;letter-spacing:0;font-weight:600;opacity:.7}
+  input{
+    font-family:inherit;font-size:16px;color:var(--ink);          /* 16px stops iOS zooming on focus */
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;width:100%;
+  }
+  input:focus{outline:2px solid color-mix(in srgb,var(--accent) 70%,transparent);outline-offset:1px;border-color:transparent}
+  .cta{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;width:100%;
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#04121a;
+    font-size:17px;font-weight:850;padding:17px 24px;border-radius:999px;margin-top:6px;
+    box-shadow:0 16px 40px -18px color-mix(in srgb,var(--accent) 80%,transparent);
+  }
+  .cta[disabled]{opacity:.6;cursor:default}
+  .err{color:#ff8a8a;font-size:14px;font-weight:700;margin-top:12px;min-height:20px}
+  .fineprint{color:var(--muted);font-size:13px;margin-top:14px}
+
+  ul.does{list-style:none;padding:0;margin:0 0 22px;display:grid;gap:10px}
+  ul.does li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:#c9d4e6}
+  ul.does li::before{content:"";flex:0 0 auto;width:8px;height:8px;margin-top:.55em;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+
+  #booked{display:none}
+  #booked.show{display:block}
+  #formCard.hide{display:none}
+  .calwrap{margin-top:18px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#fff}
+  .calwrap iframe{display:block;width:100%;height:760px;border:0}
+  .callink{display:inline-block;margin-top:14px;color:var(--accent);font-weight:700;font-size:15px}
+
+  footer{margin-top:34px;color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<div class="wrap">
+  <div class="brand">
+    <span class="dot"></span><span id="brandName">Vicron AI</span>
+    <span class="sep">·</span><span id="cohost">ActionCOACH Tampa Bay</span>
+  </div>
+
+  <p class="eyebrow">Free · No pitch</p>
+  <h1>Your AI Systems<br><span class="grad">Snapshot.</span></h1>
+  <p class="lede">Three places AI could save you time or recover revenue — specific to your
+    business, not a generic list.</p>
+
+  <div class="recap" id="recap"></div>
+
+  <!-- FORM -->
+  <div class="card" id="formCard">
+    <h2>Where should I send it?</h2>
+    <p class="sub">Takes about twenty seconds. Then you can grab a time on my calendar.</p>
+
+    <ul class="does">
+      <li>The one system worth automating first in your business</li>
+      <li>Where you're most likely leaking leads, time, or revenue right now</li>
+      <li>What to measure in the first 30 days so you know it worked</li>
+    </ul>
+
+    <form id="leadForm" novalidate>
+      <div class="field">
+        <label for="f-first">First name</label>
+        <input id="f-first" name="first" autocomplete="given-name" placeholder="Dana" required>
+      </div>
+      <div class="field">
+        <label for="f-company">Company</label>
+        <input id="f-company" name="company" autocomplete="organization" placeholder="Ruiz Barber Co" required>
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="dana@ruizbarber.com" required>
+      </div>
+      <div class="field">
+        <label for="f-phone">Mobile <span class="opt">— optional</span></label>
+        <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(813) 555-0142">
+      </div>
+      <button class="cta" id="submitBtn" type="submit">Send my snapshot</button>
+      <div class="err" id="formErr" role="alert"></div>
+      <p class="fineprint">Goes straight to <span class="coachName">Victor</span>. No list, no spam,
+        no one else sees it.</p>
+    </form>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="card" id="booked">
+    <h2 id="bookedTitle">Now grab a time.</h2>
+    <p class="sub" id="bookedSub">Pick any slot that works — it's a short call, and you'll leave
+      with the snapshot either way.</p>
+    <div class="calwrap" id="calWrap"><iframe id="calFrame" title="Booking calendar" loading="lazy"></iframe></div>
+    <a class="callink" id="calLink" target="_blank" rel="noopener">Open the calendar in a new tab →</a>
+  </div>
+
+  <footer>
+    <span id="footContact">Victor Negrón · Vicron AI</span><br>
+    <span style="opacity:.7">Scaling Systems with AI</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — the two links below are the only things to fill in.
+   ============================================================ */
+var CONFIG = {
+  brandName: "Vicron AI",
+  cohost:    "ActionCOACH Tampa Bay",
+  coachName: "Victor",
+  footContact: "Victor Negrón · Vicron AI",
+
+  // 1. YOUR BOOKING CALENDAR. GoHighLevel calendar link, Calendly, whatever you use.
+  //    Leave "" and the calendar section just won't render.
+  calendarUrl: "",
+
+  // 2. The CRM webhook is NOT set here on purpose — it lives in the host's
+  //    environment as CRM_WEBHOOK_URL so it stays out of the page source.
+  //    This form posts to /api/lead, which forwards it server-side.
+  postUrl: "/api/lead"
+};
+
+/* Labels for the answers the booth passes through in the URL. */
+var INDUSTRY = {
+  home:"Home Services", medical:"Medical / Wellness", pro:"Professional Services",
+  realty:"Real Estate", coach:"Coaching / Consulting", trades:"Trades / Contractors",
+  retail:"Local Retail / Food", other:"your business"
+};
+var BOTTLENECK = {
+  leads:"leads slipping away before anyone responds",
+  followup:"follow-up that stops after the first touch",
+  scheduling:"scheduling back-and-forth and no-shows",
+  admin:"admin work eating the day",
+  reviews:"not enough reviews for the work you do",
+  retention:"past customers going quiet"
+};
+var SYSTEM = {
+  leads:"AI Lead Response Agent", followup:"AI Follow-Up Sequencer",
+  scheduling:"AI Booking & Reminder Agent", admin:"AI Front-Desk Assistant",
+  reviews:"AI Review Engine", retention:"AI Database Reactivation"
+};
+
+(function(){
+  "use strict";
+  var $ = function(s){ return document.querySelector(s); };
+  var params = new URLSearchParams(location.search);
+  var industry = params.get("i") || "";
+  var bottleneck = params.get("b") || "";
+  var fromBooth = params.get("src") === "booth";
+
+  $("#brandName").textContent = CONFIG.brandName;
+  $("#cohost").textContent = CONFIG.cohost;
+  $("#footContact").textContent = CONFIG.footContact;
+  Array.prototype.forEach.call(document.querySelectorAll(".coachName"), function(el){
+    el.textContent = CONFIG.coachName;
+  });
+
+  /* Recap of what they told the booth, so the page doesn't feel like a cold form. */
+  if (INDUSTRY[industry] && BOTTLENECK[bottleneck]) {
+    $("#recap").innerHTML =
+      "<b>You told the AI Systems Coach:</b> <span>" + INDUSTRY[industry] +
+      ", and the biggest leak is " + BOTTLENECK[bottleneck] + ".</span><br>" +
+      "<b>First system to look at:</b> <span>" + SYSTEM[bottleneck] + ".</span>";
+    $("#recap").classList.add("show");
+  }
+
+  /* ctx is "booth" (arrived already captured) or "submitted" (just filled the form).
+     Copy differs per context, and again depending on whether a calendar is
+     configured at all — so nothing here overwrites a message set elsewhere. */
+  function showCalendar(ctx){
+    var hasCal = !!CONFIG.calendarUrl;
+    var fromBoothCtx = ctx === "booth";
+
+    $("#bookedTitle").textContent = hasCal
+      ? (fromBoothCtx ? "Grab a time." : "Now grab a time.")
+      : "You're all set.";
+
+    $("#bookedSub").textContent = hasCal
+      ? (fromBoothCtx
+          ? "We already have your details from the booth — just pick a slot that works."
+          : "Pick any slot that works — it's a short call, and you'll leave with the snapshot either way.")
+      : (fromBoothCtx
+          ? "We have your details from the booth. " + CONFIG.coachName + " will follow up shortly."
+          : "Thanks — that's in. " + CONFIG.coachName + " will be in touch shortly.");
+
+    if (hasCal) {
+      $("#calFrame").src = CONFIG.calendarUrl;
+      $("#calLink").href = CONFIG.calendarUrl;
+    } else {
+      $("#calWrap").style.display = "none";
+      $("#calLink").style.display = "none";
+    }
+
+    $("#formCard").classList.add("hide");
+    $("#booked").classList.add("show");
+    $("#booked").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  /* Someone arriving from the booth already gave their details at the kiosk.
+     Asking again reads as broken and costs the booking, so skip straight to
+     the calendar. Handout scans (no src=booth) still see the form. */
+  if (fromBooth) showCalendar("booth");
+
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  $("#leadForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = $("#submitBtn"), err = $("#formErr");
+    var lead = {
+      first:   $("#f-first").value.trim(),
+      company: $("#f-company").value.trim(),
+      email:   $("#f-email").value.trim(),
+      phone:   $("#f-phone").value.trim(),
+      industry: industry,
+      bottleneck: bottleneck,
+      system: SYSTEM[bottleneck] || "",
+      source: fromBooth ? "booth-qr" : (industry ? "handout-qr" : "landing")
+    };
+
+    if (!lead.first)   { err.textContent = "Just your first name is fine."; return; }
+    if (!lead.company) { err.textContent = "What's the business called?"; return; }
+    if (!EMAIL.test(lead.email)) { err.textContent = "That email doesn't look right."; return; }
+
+    err.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+
+    fetch(CONFIG.postUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lead)
+    })
+    .then(function(r){ return r.json().catch(function(){ return { ok: r.ok }; }); })
+    .then(function(res){
+      if (!res || !res.ok) throw new Error((res && res.error) || "Something went wrong.");
+      showCalendar("submitted");
+    })
+    .catch(function(ex){
+      btn.disabled = false;
+      btn.textContent = "Send my snapshot";
+      err.textContent = ex.message + " Try again, or just grab " + CONFIG.coachName + " at the booth.";
+    });
+  });
+})();
+</script>
+</body>
+</html>
