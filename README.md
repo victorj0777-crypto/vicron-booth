@@ -80,20 +80,19 @@ runs. If it does, the venue's wifi is no longer your problem.
 
 ## The flow
 
-1. **Attract** — big headline, one button.
-2. **Meet the coach** — the avatar plays her greeting out loud and asks for **first name,
-   company, email**. All three required; the email is format-checked.
-3. **Question 1** — what kind of business (8 options).
-4. **Question 2** — biggest bottleneck (6 options).
-5. **Result** — the recommended system, where their money leaks, what to measure, and a QR
+1. **Attract** — avatar/video is visible immediately, with a live-coach badge and the button **Talk to the AI Employee**.
+2. **Question 1** — what kind of business (8 options). No lead form before value.
+3. **Question 2** — biggest bottleneck (6 options).
+4. **Result** — the recommended system, where their money leaks, what to measure, and a QR
    tagged with their answers. She names the system out loud and sends them to you.
+5. **Handoff capture** — after the result, the visitor can leave first name, company, email,
+   and optional mobile so Victor can send the AI Systems Snapshot.
 
-Roughly 40 seconds end to end.
+Roughly 40 seconds to the recommendation, plus about 20 seconds if they choose to save it.
 
-**The tradeoff worth knowing:** asking for details before the audit means fewer people finish,
-but everyone who starts is captured. That's the right trade for a lead-gen booth — and the
-app now writes the lead **the moment they submit the form**, not at the end, so someone who
-wanders off mid-audit is still in your list, flagged `didn't finish`.
+**The tradeoff worth knowing:** asking for details after the audit means more people will try
+the booth because they get value first. The lead is captured only when they ask Victor to send
+the snapshot, so the interaction feels like a conversation first and a form second.
 
 ---
 

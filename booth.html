@@ -92,6 +92,9 @@
   .ghost:hover{color:var(--ink)}
   .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:clamp(26px,3.4vw,48px)}
   .fineprint{color:var(--muted);font-size:clamp(12px,1.05vw,15px);margin-top:18px}
+  .livehint{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--muted);font-weight:700;font-size:clamp(12px,1.05vw,15px);background:rgba(255,255,255,.035)}
+  .pill b{color:var(--ink)}
 
   /* ---- avatar ---- */
   .leadwrap{display:grid;grid-template-columns:minmax(260px,.85fr) 1.15fr;gap:clamp(22px,3vw,48px);align-items:center}
@@ -159,6 +162,12 @@
   .qr{background:#fff;padding:14px;border-radius:16px;width:clamp(150px,15vw,210px);height:clamp(150px,15vw,210px)}
   .qr svg{width:100%;height:100%;display:block}
   .kicker{font-weight:800;font-size:clamp(15px,1.35vw,19px);letter-spacing:-.01em}
+  .handoff{width:100%;text-align:left;margin-top:8px;border-top:1px solid var(--line);padding-top:18px}
+  .handoff h3{font-size:clamp(18px,1.65vw,24px);line-height:1.12;margin:0 0 8px;letter-spacing:-.02em}
+  .handoff .sub{color:var(--muted);font-size:clamp(13px,1.05vw,16px);line-height:1.4;margin:0 0 14px}
+  .handoff .cta{width:100%;font-size:clamp(15px,1.15vw,18px);padding:15px 20px}
+  .saved{display:none;color:var(--accent);font-weight:800;margin-top:12px;font-size:14px}
+  .saved.show{display:block}
 
   /* form */
   .form{display:grid;gap:14px;margin-top:clamp(18px,2.2vw,28px)}
@@ -196,38 +205,36 @@
   <main>
     <!-- 1. ATTRACT -->
     <section class="screen active" id="s-attract">
-      <p class="eyebrow">Scaling Systems with AI</p>
-      <h1>Meet your first<br><span class="grad">AI employee.</span></h1>
-      <p class="lede">Talk to her for sixty seconds. Find the one system your business should automate next.</p>
-      <div class="row">
-        <button class="cta pulse" id="startBtn">Start my 60-second AI audit</button>
+      <div class="leadwrap">
+        <div class="avatarcol">
+          <video id="avatar" playsinline preload="auto" poster="assets/avatar-poster.jpg"></video>
+          <div class="avatarbadge"><i></i> Live AI Systems Coach</div>
+          <button class="replay" id="replayBtn">↻ Replay</button>
+        </div>
+        <div>
+          <p class="eyebrow">Scaling Systems with AI</p>
+          <h1>Meet your first<br><span class="grad">AI employee.</span></h1>
+          <p class="lede">Talk to her for 60 seconds and discover the first system your business should automate with AI.</p>
+          <div class="livehint">
+            <span class="pill">🟢 <b>Live booth demo</b></span>
+            <span class="pill">🎙️ Voice-guided</span>
+            <span class="pill">No tech jargon</span>
+          </div>
+          <div class="row">
+            <button class="cta pulse" id="startBtn">Talk to the AI Employee</button>
+          </div>
+          <p class="fineprint">She'll ask two quick questions first. If you want the snapshot sent to you, Victor grabs your info at the end.</p>
+        </div>
       </div>
-      <p class="fineprint">Takes about a minute · She'll ask you two questions</p>
     </section>
 
     <!-- 2. LEAD (avatar) -->
     <section class="screen" id="s-lead">
-      <div class="leadwrap">
-        <div class="avatarcol">
-          <video id="avatar" playsinline preload="auto" poster="assets/avatar-poster.jpg"></video>
-          <div class="avatarbadge"><i></i> AI Systems Coach</div>
-          <button class="replay" id="replayBtn">↻ Replay</button>
-        </div>
-        <div>
-          <p class="eyebrow">Before we start</p>
-          <h2>Who am I<br>talking to?</h2>
-          <div class="form">
-            <div class="field"><label for="f-first">First name</label><input id="f-first" autocomplete="given-name" placeholder="Dana"></div>
-            <div class="field"><label for="f-company">Company</label><input id="f-company" autocomplete="organization" placeholder="Ruiz Barber Co"></div>
-            <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="dana@ruizbarber.com"></div>
-          </div>
-          <div class="err" id="formErr"></div>
-          <div class="row" style="margin-top:18px">
-            <button class="cta" id="leadNext">Start my audit</button>
-          </div>
-          <p class="fineprint">Goes straight to <span class="coachName">Victor</span>. No list, no spam.</p>
-        </div>
-      </div>
+      <p class="eyebrow">Live AI Systems Coach</p>
+      <h2>Let's find your first AI employee.</h2>
+      <p class="lede">Two quick questions. Then, if you want to keep the snapshot, leave your details for Victor.</p>
+      <div class="row"><button class="cta" id="leadNext">Start my live audit</button></div>
+      <div class="err" id="leadErr"></div>
       <div class="steps"><span class="steplabel">Step 1</span><i class="on"></i><i></i><i></i></div>
     </section>
 
@@ -264,7 +271,21 @@
           <div class="kicker">What you'd watch in 30 days</div>
           <div class="chips" id="measureChips" style="justify-content:center"></div>
           <div class="qr" id="qrResult"></div>
-          <div class="muted" style="font-size:14px">Scan to keep this —<br>then go grab <span class="coachName">Victor</span>.</div>
+          <div class="muted" style="font-size:14px"><b>Want this mapped for your business?</b><br>Scan this, then grab <span class="coachName">Victor</span>.</div>
+
+          <div class="handoff">
+            <h3>Want Victor to send this AI Systems Snapshot?</h3>
+            <p class="sub">Leave your info here or just show Victor this screen and ask, “what would this look like in my business?”</p>
+            <div class="form">
+              <div class="field"><label for="f-first">First name</label><input id="f-first" autocomplete="given-name" placeholder="Dana"></div>
+              <div class="field"><label for="f-company">Company</label><input id="f-company" autocomplete="organization" placeholder="Ruiz Barber Co"></div>
+              <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" inputmode="email" autocomplete="email" placeholder="dana@ruizbarber.com"></div>
+              <div class="field"><label for="f-phone">Mobile <span style="text-transform:none;letter-spacing:0;font-weight:600;opacity:.7">— optional</span></label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(813) 555-0142"></div>
+            </div>
+            <div class="err" id="formErr"></div>
+            <button class="cta" id="saveLeadBtn">Send this to Victor</button>
+            <div class="saved" id="savedMsg">✓ Saved. Go grab Victor — he can map this next.</div>
+          </div>
         </div>
       </div>
     </section>
@@ -869,8 +890,8 @@ var LEAKS = {
 (function(){
   "use strict";
   var $ = function(s){ return document.querySelector(s); };
-  var state = { first:"", company:"", email:"", industry:null, bottleneck:null, muted:false, leadIndex:null };
-  var LS_LEADS = "vicron_booth_leads_v2";
+  var state = { first:"", company:"", email:"", phone:"", industry:null, bottleneck:null, muted:false, leadIndex:null };
+  var LS_LEADS = "vicron_booth_leads_v3";
   var LS_MUTE  = "vicron_booth_muted_v1";
 
   /* ---------- branding ---------- */
@@ -963,10 +984,11 @@ var LEAKS = {
     idleTimer = setTimeout(fullReset, CONFIG.idleResetSeconds * 1000);
   }
   function fullReset(){
-    state.first = ""; state.company = ""; state.email = "";
+    state.first = ""; state.company = ""; state.email = ""; state.phone = "";
     state.industry = null; state.bottleneck = null; state.leadIndex = null;
-    $("#f-first").value = ""; $("#f-company").value = ""; $("#f-email").value = "";
-    $("#formErr").textContent = "";
+    ["#f-first","#f-company","#f-email","#f-phone"].forEach(function(sel){ var el=$(sel); if(el) el.value=""; });
+    var err=$("#formErr"); if(err) err.textContent = "";
+    var saved=$("#savedMsg"); if(saved) saved.classList.remove("show");
     $("#eyebrowIndustry").textContent = "Question 1 of 2";
     $("#resultEyebrow").textContent = "Your first AI system";
     try { avatar.pause(); avatar.currentTime = 0; } catch(e){}
@@ -1026,9 +1048,7 @@ var LEAKS = {
     var sys = SYSTEMS[state.bottleneck];
     var leak = (LEAKS[state.industry] || LEAKS.other)[state.bottleneck];
 
-    $("#resultEyebrow").textContent = state.first
-      ? "Alright " + state.first + " — your first AI system"
-      : "Your first AI system";
+    $("#resultEyebrow").textContent = "Your first AI system";
     $("#sysName").innerHTML = sys.name;
     $("#leakLine").textContent = leak;
 
@@ -1043,7 +1063,6 @@ var LEAKS = {
     });
 
     paintQR($("#qrResult"));
-    completeLead();
     show("result");
     say(CONFIG.audio[state.bottleneck],
         "Based on that, your first AI system should probably be " + decode(sys.name) +
@@ -1057,40 +1076,41 @@ var LEAKS = {
   function writeLeads(all){
     try { localStorage.setItem(LS_LEADS, JSON.stringify(all)); } catch(e){}
   }
-  // Captured the moment they submit the form, so someone who wanders off
-  // mid-audit is still a lead. The answers get filled in later if they finish.
+  // Captured at the end, after the visitor has received value. That keeps the
+  // booth feeling like a conversation first and a lead form second.
   function captureLead(){
     var all = loadLeads();
     all.push({
       at: new Date().toISOString(),
-      first: state.first, company: state.company, email: state.email,
-      industry: "", bottleneck: "", system: "", completed: false
+      first: state.first, company: state.company, email: state.email, phone: state.phone,
+      industry: state.industry || "", bottleneck: state.bottleneck || "",
+      system: decode(SYSTEMS[state.bottleneck] ? SYSTEMS[state.bottleneck].name : ""),
+      completed: true
     });
     state.leadIndex = all.length - 1;
     writeLeads(all);
   }
-  function completeLead(){
-    if (state.leadIndex == null) return;
-    var all = loadLeads();
-    var lead = all[state.leadIndex];
-    if (!lead || lead.email !== state.email) return;   // list changed under us; leave it alone
-    lead.industry = state.industry;
-    lead.bottleneck = state.bottleneck;
-    lead.system = decode(SYSTEMS[state.bottleneck] ? SYSTEMS[state.bottleneck].name : "");
-    lead.completed = true;
-    writeLeads(all);
-  }
+  function completeLead(){ captureLead(); }
 
   /* ---------- flow ---------- */
   $("#startBtn").addEventListener("click", function(){
-    show("lead");
-    playAvatar();   // the click is the user gesture that unlocks audio
+    playAvatar();   // the click is the user gesture that unlocks the voice/video
+    show("industry");
+    $("#eyebrowIndustry").textContent = "Question 1 of 2";
+    say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
   });
 
   $("#leadNext").addEventListener("click", function(){
+    show("industry");
+    say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
+  });
+
+  $("#saveLeadBtn").addEventListener("click", function(){
     var first = $("#f-first").value.trim();
     var company = $("#f-company").value.trim();
     var email = $("#f-email").value.trim();
+    var phoneEl = $("#f-phone");
+    var phone = phoneEl ? phoneEl.value.trim() : "";
 
     if (!first)   { $("#formErr").textContent = "Just your first name is fine."; return; }
     if (!company) { $("#formErr").textContent = "What's the business called?"; return; }
@@ -1099,12 +1119,11 @@ var LEAKS = {
       return;
     }
     $("#formErr").textContent = "";
-    state.first = first; state.company = company; state.email = email;
+    state.first = first; state.company = company; state.email = email; state.phone = phone;
     captureLead();
-
-    $("#eyebrowIndustry").textContent = "Question 1 of 2 · Thanks, " + first;
-    show("industry");
-    say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
+    $("#savedMsg").classList.add("show");
+    $("#saveLeadBtn").textContent = "Saved for Victor";
+    $("#saveLeadBtn").disabled = true;
   });
 
   $("#againBtn").addEventListener("click", fullReset);
@@ -1122,6 +1141,7 @@ var LEAKS = {
                                 : "<span class='muted'>didn't finish</span>";
       return "<tr><td>" + new Date(l.at).toLocaleString() + "</td><td><strong>" + esc(l.first) +
              "</strong><br><span class='muted'>" + esc(l.company) + "</span></td><td>" + esc(l.email) +
+             (l.phone ? "<br><span class='muted'>" + esc(l.phone) + "</span>" : "") +
              "</td><td>" + answers + "</td><td>" + esc(l.system) + "</td></tr>";
     }).join("");
     var done = all.filter(function(l){ return l.completed; }).length;
@@ -1164,10 +1184,10 @@ var LEAKS = {
   $("#exportBtn").addEventListener("click", function(){
     var all = loadLeads();
     if (!all.length){ alert("Nothing to export yet."); return; }
-    var head = ["captured_at","first_name","company","email","industry","bottleneck","recommended_system","finished_audit"];
+    var head = ["captured_at","first_name","company","email","phone","industry","bottleneck","recommended_system","finished_audit"];
     var lines = [head.join(",")];
     all.forEach(function(l){
-      lines.push([l.at,l.first,l.company,l.email,l.industry,l.bottleneck,l.system,l.completed?"yes":"no"].map(function(v){
+      lines.push([l.at,l.first,l.company,l.email,l.phone||"",l.industry,l.bottleneck,l.system,l.completed?"yes":"no"].map(function(v){
         return '"' + String(v == null ? "" : v).replace(/"/g,'""') + '"';
       }).join(","));
     });
