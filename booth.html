@@ -192,6 +192,40 @@
   th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:12px}
   .muted{color:var(--muted)}
+
+  /* voice-first orb */
+  .orbwrap{display:grid;grid-template-columns:minmax(280px,.9fr) 1.1fr;gap:clamp(26px,4vw,58px);align-items:center}
+  .orbwrap h1{font-size:clamp(36px,6vw,82px)}
+  @media (max-width:920px){.orbwrap{grid-template-columns:1fr;text-align:left}.orbstage{min-height:280px}}
+  .orbstage{position:relative;min-height:clamp(280px,36vw,440px);display:grid;place-items:center}
+  .orb{
+    position:relative;width:clamp(170px,24vw,310px);aspect-ratio:1;border-radius:50%;
+    background:
+      radial-gradient(circle at 38% 32%, rgba(255,255,255,.95) 0 3%, rgba(255,255,255,.22) 8%, transparent 22%),
+      radial-gradient(circle at 42% 40%, color-mix(in srgb,var(--accent-2) 88%, white) 0 12%, color-mix(in srgb,var(--accent) 75%, transparent) 32%, rgba(76,201,240,.16) 58%, transparent 72%);
+    box-shadow:
+      0 0 42px color-mix(in srgb,var(--accent) 60%,transparent),
+      0 0 110px color-mix(in srgb,var(--accent-2) 42%,transparent),
+      inset 0 0 44px rgba(255,255,255,.18),
+      inset -28px -22px 70px rgba(3,8,18,.72);
+    animation:orbFloat 5.8s ease-in-out infinite, orbGlow 3.2s ease-in-out infinite alternate;
+  }
+  .orb::before,.orb::after{content:"";position:absolute;inset:-18%;border-radius:50%;border:1px solid rgba(255,255,255,.14);filter:blur(.2px);animation:orbRing 7s linear infinite}
+  .orb::after{inset:-34%;border-color:color-mix(in srgb,var(--accent-2) 28%,transparent);animation-duration:11s;animation-direction:reverse}
+  .orbcore{position:absolute;inset:29%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.86),rgba(61,220,151,.22) 46%,transparent 70%);filter:blur(8px);animation:orbPulse 1.8s ease-in-out infinite alternate}
+  .wave{position:absolute;width:clamp(220px,30vw,380px);height:clamp(50px,6vw,76px);display:flex;align-items:center;justify-content:center;gap:clamp(5px,.7vw,9px);opacity:.82;transform:translateY(clamp(120px,15vw,190px))}
+  .wave i{display:block;width:clamp(4px,.55vw,8px);height:22%;border-radius:999px;background:linear-gradient(var(--accent),var(--accent-2));box-shadow:0 0 16px color-mix(in srgb,var(--accent-2) 55%,transparent);animation:bar 1.05s ease-in-out infinite alternate}
+  .wave i:nth-child(2n){animation-delay:.12s}.wave i:nth-child(3n){animation-delay:.24s}.wave i:nth-child(4n){animation-delay:.36s}.wave i:nth-child(5n){animation-delay:.48s}
+  .voicepanel{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:var(--r);padding:clamp(20px,2.2vw,32px);box-shadow:0 30px 80px -50px rgba(0,0,0,.9)}
+  .embedbox{margin-top:14px;border:1px dashed color-mix(in srgb,var(--accent-2) 45%,transparent);border-radius:18px;min-height:clamp(135px,17vw,205px);display:grid;place-items:center;text-align:center;padding:18px;background:rgba(255,255,255,.035)}
+  .embedbox code{display:block;margin-top:10px;color:var(--accent);font-size:12px;white-space:normal}
+  @keyframes orbFloat{0%,100%{transform:translateY(-10px)}50%{transform:translateY(12px)}}
+  @keyframes orbGlow{from{filter:saturate(1)}to{filter:saturate(1.25) brightness(1.08)}}
+  @keyframes orbRing{to{transform:rotate(360deg)}}
+  @keyframes orbPulse{to{transform:scale(1.14);opacity:.72}}
+  @keyframes bar{from{height:18%;opacity:.45}to{height:88%;opacity:1}}
+  @media (prefers-reduced-motion:reduce){.orb,.orb::before,.orb::after,.orbcore,.wave i{animation:none}}
+
 </style>
 </head>
 <body>
@@ -209,37 +243,55 @@
   <main>
     <!-- 1. ATTRACT -->
     <section class="screen active" id="s-attract">
-      <div class="leadwrap">
-        <div class="avatarcol">
-          <video id="avatar" playsinline preload="auto" poster="assets/avatar-poster.jpg"></video>
-          <div class="avatarbadge"><i></i> Live AI Systems Coach</div>
-          <button class="replay" id="replayBtn">↻ Replay</button>
+      <div class="orbwrap">
+        <div class="orbstage" aria-hidden="true">
+          <div class="orb"><span class="orbcore"></span></div>
+          <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
         <div>
           <p class="eyebrow">Scaling Systems with AI</p>
-          <h1>Meet your first<br><span class="grad">AI employee.</span></h1>
-          <p class="lede">Talk to her for 60 seconds and discover the first system your business should automate with AI.</p>
+          <h1>Talk to your first<br><span class="grad">AI employee.</span></h1>
+          <p class="lede">Start with a live voice conversation. She’ll find the first system your business should automate next.</p>
           <div class="livehint">
-            <span class="pill">🟢 <b>Live booth demo</b></span>
-            <span class="pill">🎙️ Voice-guided</span>
-            <span class="pill">No tech jargon</span>
+            <span class="pill">🟢 <b>Live AI coach</b></span>
+            <span class="pill">🎙️ Speak naturally</span>
+            <span class="pill">60–90 seconds</span>
           </div>
           <div class="row">
-            <button class="cta pulse" id="startBtn">Talk to the AI Employee</button>
+            <button class="cta pulse" id="startBtn">Start Live Voice AI</button>
+            <button class="ghost" id="tapFallbackBtn">Room too loud? Tap instead</button>
           </div>
-          <p class="fineprint">She'll ask two quick questions first. If you want the snapshot sent to you, Victor grabs your info at the end.</p>
+          <p class="fineprint">The glowing orb is the live agent. If the room is noisy or the embed hiccups, the tap-through audit still works.</p>
         </div>
       </div>
     </section>
 
     <!-- 2. LEAD (avatar) -->
     <section class="screen" id="s-lead">
-      <p class="eyebrow">Live AI Systems Coach</p>
-      <h2>Let's find your first AI employee.</h2>
-      <p class="lede">Two quick questions. Then, if you want to keep the snapshot, leave your details for Victor.</p>
-      <div class="row"><button class="cta" id="leadNext">Start my live audit</button></div>
-      <div class="err" id="leadErr"></div>
-      <div class="steps"><span class="steplabel">Step 1</span><i class="on"></i><i></i><i></i></div>
+      <div class="orbwrap">
+        <div class="orbstage" aria-hidden="true">
+          <div class="orb"><span class="orbcore"></span></div>
+          <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="voicepanel">
+          <p class="eyebrow">Live AI Systems Coach</p>
+          <h2>Speak naturally.</h2>
+          <p class="lede">Tell her what business you run and where things feel stuck. She’ll recommend your first AI employee.</p>
+          <div id="ghlVoiceMount" class="embedbox">
+            <div>
+              <strong>GHL Voice AI embed goes here.</strong>
+              <div class="muted" style="margin-top:8px;font-size:14px">Send Clark the embed code and this becomes the live agent window.</div>
+              <code>&lt;script&gt; / &lt;iframe&gt; from GHL</code>
+            </div>
+          </div>
+          <div class="row" style="margin-top:18px">
+            <button class="ghost" id="leadNext">Use tap-through audit instead</button>
+            <button class="ghost" id="voiceDoneBtn">I finished with the voice agent</button>
+          </div>
+          <p class="fineprint">The voice agent should hand them to Victor. The tap-through audit stays as the reliable fallback.</p>
+        </div>
+      </div>
+      <div class="steps"><span class="steplabel">Live voice</span><i class="on"></i><i></i><i></i></div>
     </section>
 
     <!-- 3. INDUSTRY -->
@@ -346,7 +398,10 @@ var CONFIG = {
   },
 
   voice: true,               // agent speaks; visitors can mute from the top-right
-  idleResetSeconds: 75       // reset to the attract screen after this much inactivity
+  idleResetSeconds: 75,      // reset to the attract screen after this much inactivity
+
+  // Paste the GHL Voice AI embed here when ready. If blank, the booth shows a placeholder.
+  ghlVoiceEmbedHtml: ""
 };
 
 /* ---- QR encoder (verified: decodes clean across QR versions 1-10) ---- */
@@ -945,7 +1000,7 @@ var LEAKS = {
   $("#muteBtn").addEventListener("click", function(){
     state.muted = !state.muted;
     localStorage.setItem(LS_MUTE, state.muted ? "1" : "0");
-    avatar.muted = state.muted;
+    if (avatar) avatar.muted = state.muted;
     if (state.muted) stopSpeaking();
     renderMute();
   });
@@ -954,24 +1009,24 @@ var LEAKS = {
   var avatar = $("#avatar");
   var replayBtn = $("#replayBtn");
   document.documentElement.style.setProperty("--avatar-aspect", CONFIG.avatarAspect || "1/1");
-  avatar.src = CONFIG.avatarVideo;
-  avatar.addEventListener("ended", function(){ replayBtn.classList.add("show"); });
+  if (avatar) avatar.src = CONFIG.avatarVideo;
+  if (avatar) avatar.addEventListener("ended", function(){ replayBtn.classList.add("show"); });
   function playAvatar(){
     replayBtn.classList.remove("show");
-    avatar.muted = state.muted;
+    if (avatar) avatar.muted = state.muted;
     try { avatar.currentTime = 0; } catch(e){}
     var p = avatar.play();
     // if autoplay-with-sound is refused, show the still and let them tap replay
     if (p && p.catch) p.catch(function(){ replayBtn.classList.add("show"); });
   }
-  replayBtn.addEventListener("click", playAvatar);
-  avatar.addEventListener("click", function(){ if (avatar.paused) playAvatar(); });
+  if (replayBtn) replayBtn.addEventListener("click", playAvatar);
+  if (avatar) avatar.addEventListener("click", function(){ if (avatar.paused) playAvatar(); });
 
   /* ---------- screens ---------- */
   var current = "attract";
   function show(name){
     stopSpeaking();
-    if (name !== "lead"){ try { avatar.pause(); } catch(e){} }
+    if (name !== "lead"){ try { avatar && avatar.pause(); } catch(e){} }
     Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
       s.classList.remove("active");
     });
@@ -995,8 +1050,8 @@ var LEAKS = {
     var saved=$("#savedMsg"); if(saved) saved.classList.remove("show");
     $("#eyebrowIndustry").textContent = "Question 1 of 2";
     $("#resultEyebrow").textContent = "Your first AI system";
-    try { avatar.pause(); avatar.currentTime = 0; } catch(e){}
-    replayBtn.classList.remove("show");
+    try { if (avatar) { avatar.pause(); avatar.currentTime = 0; } } catch(e){}
+    if (replayBtn) replayBtn.classList.remove("show");
     show("attract");
   }
   ["click","touchstart","keydown","mousemove"].forEach(function(ev){
@@ -1097,17 +1152,25 @@ var LEAKS = {
   function completeLead(){ captureLead(); }
 
   /* ---------- flow ---------- */
-  $("#startBtn").addEventListener("click", function(){
-    playAvatar();   // the click is the user gesture that unlocks the voice/video
+  function startTapAudit(){
     show("industry");
     $("#eyebrowIndustry").textContent = "Question 1 of 2";
     say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
-  });
+  }
 
-  $("#leadNext").addEventListener("click", function(){
-    show("industry");
-    say(CONFIG.audio.industry, "Perfect. Now, what kind of business do you run?");
+  function mountGhlVoice(){
+    var mount = $("#ghlVoiceMount");
+    if (!mount || !CONFIG.ghlVoiceEmbedHtml) return;
+    mount.innerHTML = CONFIG.ghlVoiceEmbedHtml;
+  }
+
+  $("#startBtn").addEventListener("click", function(){
+    mountGhlVoice();
+    show("lead");
   });
+  $("#tapFallbackBtn").addEventListener("click", startTapAudit);
+  $("#leadNext").addEventListener("click", startTapAudit);
+  $("#voiceDoneBtn").addEventListener("click", startTapAudit);
 
   $("#saveLeadBtn").addEventListener("click", function(){
     var first = $("#f-first").value.trim();

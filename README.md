@@ -3,12 +3,12 @@
 | File | What it is |
 |---|---|
 | `index.html` | **Root kiosk page.** Same live AI employee booth experience as `booth.html`, so the custom domain opens the booth. |
-| `booth.html` | **The kiosk backup URL.** Attract → 2 questions → tailored result + end-of-flow capture + QR. |
+| `booth.html` | **The kiosk backup URL.** Glowing orb voice-first entry → GHL voice embed slot → tap-through fallback → tailored result + capture + QR. |
 | `snapshot.html` | **Public snapshot landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
 | `handout.html` | The one-page AI Systems Checklist. Open it and print / save as PDF. |
 | `api/lead.js` | Receives the landing-page form and forwards it to your CRM. |
 | `SETUP-CRM-AND-CALENDAR.md` | **Start here.** The two links you still need to fill in. |
-| `assets/` | The avatar video and the voice lines. |
+| `assets/` | Legacy avatar media and local voice lines used by the tap-through fallback. |
 | `SWAP-IN-TERESA-AND-BRIONY.md` | Step-by-step for dropping in your HeyGen avatar and ElevenLabs voice. |
 | `README.md` | This file. |
 
@@ -25,9 +25,10 @@ Then:
 - **http://localhost:8731/booth.html** — backup kiosk URL.
 - **http://localhost:8731/snapshot.html** — the public snapshot page prospects land on from QR.
 
-Serve it over localhost rather than double-clicking the file — `file://` blocks media
-autoplay and the microphone. No build step, no npm, no API keys. Once loaded it runs
-fully offline: the avatar and every voice line are local files.
+Serve it over localhost rather than double-clicking the file — `file://` can block media,
+microphone, and embedded widgets. The tap-through fallback has no build step, no npm, and
+no API keys. Once loaded it can run from cache; the GHL live voice embed will still need
+network access when you add it.
 
 ---
 
@@ -35,8 +36,10 @@ fully offline: the avatar and every voice line are local files.
 
 The repo is private. Two audiences share one domain:
 
-- **`/` — the landing page.** Public. Prospects scan a QR and land here. Its form posts to
-  `/api/lead`, which forwards to your CRM, then shows your calendar. See
+- **`/` — the root kiosk.** Public custom-domain booth entry. It opens with the glowing orb,
+  starts the GHL voice-agent screen, and keeps the tap-through audit as fallback.
+- **`/snapshot.html` — the landing page.** Prospects scan a QR and land here. Its form posts
+  to `/api/lead`, which forwards to your CRM, then shows your calendar. See
   `SETUP-CRM-AND-CALENDAR.md` for the two links that still need filling in.
 - **`/booth.html` — the kiosk.** Runs on *your* device at the booth. Its leads stay in that
   device's `localStorage` and export to CSV, which is deliberate: a local-first capture
@@ -47,10 +50,10 @@ after one successful load on the booth device, everything runs from cache and th
 can die without the kiosk noticing. Verified by killing the server and reloading — the page,
 the avatar video, and every voice line still served.
 
-**One rule:** if you swap the avatar or any voice line, bump `CACHE` in `sw.js`
-(currently `vicron-booth-v2` → make it `-v3`). Otherwise booth devices keep serving the old
-media from cache forever. The service worker deliberately never caches `/` or `/api/`, so the
-public page and the lead endpoint are always live.
+**One rule:** if you change kiosk HTML/CSS, swap media, or add the voice embed, bump `CACHE`
+in `sw.js` (currently `vicron-booth-v6`). Otherwise booth devices can keep serving stale
+cached files. The service worker deliberately never caches `/api/`, so the lead endpoint is
+always live.
 
 Deploy steps, once `gh auth login` is done:
 
@@ -82,12 +85,14 @@ runs. If it does, the venue's wifi is no longer your problem.
 
 ## The flow
 
-1. **Attract** — avatar/video is visible immediately, with a live-coach badge and the button **Talk to the AI Employee**.
-2. **Question 1** — what kind of business (8 options). No lead form before value.
-3. **Question 2** — biggest bottleneck (6 options).
-4. **Result** — the recommended system, where their money leaks, what to measure, and a QR
+1. **Attract** — a glowing floating orb leads with **Start Live Voice AI**.
+2. **Live voice** — GHL Voice AI embed slot asks the visitor what business they run and where they feel stuck.
+3. **Fallback** — if the room is loud or the embed is not ready, **Room too loud? Tap instead** starts the guided audit.
+4. **Question 1** — what kind of business (8 options). No lead form before value.
+5. **Question 2** — biggest bottleneck (6 options).
+6. **Result** — the recommended system, where their money leaks, what to measure, and a QR
    tagged with their answers. She names the system out loud and sends them to you.
-5. **Handoff capture** — after the result, the visitor can leave first name, company, email,
+7. **Handoff capture** — after the result, the visitor can leave first name, company, email,
    and optional mobile so Victor can send the AI Systems Snapshot.
 
 Roughly 40 seconds to the recommendation, plus about 20 seconds if they choose to save it.
