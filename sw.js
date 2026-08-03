@@ -5,7 +5,7 @@
 
    Bump CACHE when you swap the avatar or any voice line, or the booth will keep
    serving the old media from cache. */
-var CACHE = "vicron-booth-v9";
+var CACHE = "vicron-booth-v10";
 
 var ASSETS = [
   "./index.html",
@@ -14,6 +14,7 @@ var ASSETS = [
   "./handout.html",
   "./assets/avatar.mp4",
   "./assets/avatar-poster.jpg",
+  "./assets/vicron-ai-logo.png",
   "./assets/q-industry.mp3",
   "./assets/q-bottleneck.mp3",
   "./assets/r-leads.mp3",

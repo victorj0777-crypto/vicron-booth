@@ -3,7 +3,7 @@
 | File | What it is |
 |---|---|
 | `index.html` | **Root kiosk page.** Same live AI employee booth experience as `booth.html`, so the custom domain opens the booth. |
-| `booth.html` | **The kiosk backup URL.** Glowing orb voice-first entry → GHL voice embed slot → tap-through fallback → tailored result + capture + QR. |
+| `booth.html` | **Legacy backup URL.** Redirects visitors to `/` so the home page is the single AI agent experience. |
 | `snapshot.html` | **Public snapshot landing page.** What prospects see when they scan a QR. Form → CRM → calendar. |
 | `handout.html` | The one-page AI Systems Checklist. Open it and print / save as PDF. |
 | `api/lead.js` | Receives the landing-page form and forwards it to your CRM. |
@@ -85,7 +85,7 @@ runs. If it does, the venue's wifi is no longer your problem.
 
 ## The flow
 
-1. **Attract** — a glowing floating orb leads with **Start Live Voice AI**.
+1. **Attract** — the home page centers **Scaling your business with AI** and launches the GHL voice agent.
 2. **Live voice** — GHL Voice AI embed slot asks the visitor what business they run and where they feel stuck.
 3. **Fallback** — if the room is loud or the embed is not ready, **Room too loud? Tap instead** starts the guided audit.
 4. **Question 1** — what kind of business (8 options). No lead form before value.

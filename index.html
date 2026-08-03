@@ -7,21 +7,22 @@
 <style>
   :root{
     /* ---- BRAND: change these five values to rebrand the whole booth ---- */
-    --accent:#3ddc97;
-    --accent-2:#4cc9f0;
-    --bg:#070b14;
-    --panel:#0f1626;
-    --ink:#f2f6ff;
+    --accent:#1976ff;
+    --accent-2:#7c3aed;
+    --bg:#f6f8ff;
+    --panel:#ffffff;
+    --ink:#101828;
 
-    --muted:#93a3c0;
-    --line:rgba(255,255,255,.10);
+    --muted:#667085;
+    --line:rgba(16,24,40,.12);
     --r:20px;
     --pad:clamp(20px,3.2vw,52px);
   }
   *{box-sizing:border-box}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   html,body{height:100%}
   body{
-    margin:0;background:var(--bg);color:var(--ink);
+    margin:0;background:linear-gradient(135deg,#f7fbff 0%,#eef4ff 46%,#f8f5ff 100%);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
     -webkit-font-smoothing:antialiased;overflow:hidden;
     touch-action:manipulation;-webkit-tap-highlight-color:transparent;
@@ -34,12 +35,13 @@
   .bg::before{
     content:"";position:absolute;inset:-30%;
     background:
-      radial-gradient(closest-side at 22% 18%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
-      radial-gradient(closest-side at 82% 78%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%);
+      radial-gradient(closest-side at 20% 18%, rgba(25,118,255,.20), transparent 70%),
+      radial-gradient(closest-side at 82% 78%, rgba(124,58,237,.16), transparent 70%),
+      radial-gradient(closest-side at 50% 108%, rgba(20,184,166,.10), transparent 70%);
     filter:blur(40px);animation:drift 26s ease-in-out infinite alternate;
   }
   .bg::after{
-    content:"";position:absolute;inset:0;opacity:.35;
+    content:"";position:absolute;inset:0;opacity:.28;
     background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
     background-size:64px 64px;
     mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 78%);
@@ -53,10 +55,11 @@
   /* chrome */
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:var(--pad) var(--pad) 0}
   .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(11px,1.05vw,14px)}
-  .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 22px color-mix(in srgb,var(--accent) 65%,transparent)}
+  .brand-logo{width:clamp(132px,14vw,190px);height:auto;display:block;filter:drop-shadow(0 12px 28px rgba(25,118,255,.14))}
+  .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 22px color-mix(in srgb,var(--accent) 45%,transparent)}
   .cohost{color:var(--muted);font-weight:600;letter-spacing:.06em}
   .iconbtn{
-    appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);
+    appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.76);color:var(--muted);
     border-radius:999px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px
   }
   .iconbtn:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
@@ -78,7 +81,7 @@
 
   .cta{
     appearance:none;border:0;cursor:pointer;font-family:inherit;
-    background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#04121a;
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#fff;
     font-size:clamp(17px,1.75vw,24px);font-weight:850;letter-spacing:-.01em;
     padding:clamp(18px,1.9vw,26px) clamp(28px,3vw,46px);border-radius:999px;
     box-shadow:0 18px 50px -18px color-mix(in srgb,var(--accent) 80%,transparent);
@@ -111,7 +114,7 @@
   }
   .avatarbadge{
     position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:8px;
-    background:rgba(4,10,18,.72);backdrop-filter:blur(8px);
+    background:rgba(255,255,255,.72);backdrop-filter:blur(8px);
     border:1px solid var(--line);border-radius:999px;padding:7px 14px;
     font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
   }
@@ -119,7 +122,7 @@
   @keyframes blink{50%{opacity:.25}}
   .replay{
     position:absolute;inset:auto 0 14px 0;margin:auto;width:max-content;
-    background:rgba(4,10,18,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
+    background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
     border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--muted);
     cursor:pointer;opacity:0;transition:opacity .3s ease;pointer-events:none;
   }
@@ -134,7 +137,7 @@
   @media (max-width:620px){.grid.four,.grid.three{grid-template-columns:1fr}}
   .opt{
     appearance:none;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);
-    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+    background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.72));
     border:1px solid var(--line);border-radius:var(--r);
     padding:clamp(16px,1.7vw,24px);min-height:clamp(104px,11vw,150px);
     display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
@@ -155,7 +158,7 @@
   /* result */
   .result{display:grid;grid-template-columns:1.55fr .95fr;gap:clamp(18px,2.2vw,34px);align-items:start}
   @media (max-width:900px){.result{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:clamp(18px,2vw,30px)}
+  .card{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:var(--r);padding:clamp(18px,2vw,30px);box-shadow:0 24px 70px -48px rgba(16,24,40,.55)}
   .leak{color:var(--muted);font-size:clamp(15px,1.4vw,20px);line-height:1.5;margin:14px 0 0}
   ul.does{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:11px}
   ul.does li{display:flex;gap:12px;align-items:flex-start;font-size:clamp(14px,1.25vw,18px);line-height:1.4}
@@ -179,56 +182,33 @@
   label{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   input{
     font-family:inherit;font-size:clamp(16px,1.4vw,20px);color:var(--ink);
-    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;
+    background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:14px;
     padding:clamp(14px,1.4vw,18px) 18px;width:100%;
   }
   input:focus{outline:2px solid color-mix(in srgb,var(--accent) 70%,transparent);outline-offset:1px;border-color:transparent}
   .err{color:#ff8a8a;font-size:14px;font-weight:700;margin-top:12px;min-height:20px}
 
   /* admin */
-  .overlay{position:fixed;inset:0;z-index:50;background:rgba(3,6,12,.94);padding:var(--pad);overflow:auto}
+  .overlay{position:fixed;inset:0;z-index:50;background:rgba(246,248,255,.96);padding:var(--pad);overflow:auto}
   .overlay[hidden]{display:none}
   table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
   th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:12px}
   .muted{color:var(--muted)}
 
-  /* voice-first orb */
-  .orbwrap{display:grid;grid-template-columns:minmax(280px,.9fr) 1.1fr;gap:clamp(26px,4vw,58px);align-items:center}
-  .orbwrap h1{font-size:clamp(36px,6vw,82px)}
-  @media (max-width:920px){.orbwrap{grid-template-columns:1fr;text-align:left}.orbstage{min-height:280px}}
-  .orbstage{position:relative;min-height:clamp(280px,36vw,440px);display:grid;place-items:center}
-  .orb{
-    position:relative;width:clamp(170px,24vw,310px);aspect-ratio:1;border-radius:50%;
-    background:
-      radial-gradient(circle at 38% 32%, rgba(255,255,255,.95) 0 3%, rgba(255,255,255,.22) 8%, transparent 22%),
-      radial-gradient(circle at 42% 40%, color-mix(in srgb,var(--accent-2) 88%, white) 0 12%, color-mix(in srgb,var(--accent) 75%, transparent) 32%, rgba(76,201,240,.16) 58%, transparent 72%);
-    box-shadow:
-      0 0 42px color-mix(in srgb,var(--accent) 60%,transparent),
-      0 0 110px color-mix(in srgb,var(--accent-2) 42%,transparent),
-      inset 0 0 44px rgba(255,255,255,.18),
-      inset -28px -22px 70px rgba(3,8,18,.72);
-    animation:orbFloat 5.8s ease-in-out infinite, orbGlow 3.2s ease-in-out infinite alternate;
-  }
-  .orb::before,.orb::after{content:"";position:absolute;inset:-18%;border-radius:50%;border:1px solid rgba(255,255,255,.14);filter:blur(.2px);animation:orbRing 7s linear infinite}
-  .orb::after{inset:-34%;border-color:color-mix(in srgb,var(--accent-2) 28%,transparent);animation-duration:11s;animation-direction:reverse}
-  .orbcore{position:absolute;inset:29%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.86),rgba(61,220,151,.22) 46%,transparent 70%);filter:blur(8px);animation:orbPulse 1.8s ease-in-out infinite alternate}
-  .wave{position:absolute;width:clamp(220px,30vw,380px);height:clamp(50px,6vw,76px);display:flex;align-items:center;justify-content:center;gap:clamp(5px,.7vw,9px);opacity:.82;transform:translateY(clamp(120px,15vw,190px))}
-  .wave i{display:block;width:clamp(4px,.55vw,8px);height:22%;border-radius:999px;background:linear-gradient(var(--accent),var(--accent-2));box-shadow:0 0 16px color-mix(in srgb,var(--accent-2) 55%,transparent);animation:bar 1.05s ease-in-out infinite alternate}
-  .wave i:nth-child(2n){animation-delay:.12s}.wave i:nth-child(3n){animation-delay:.24s}.wave i:nth-child(4n){animation-delay:.36s}.wave i:nth-child(5n){animation-delay:.48s}
-  .voicepanel{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:var(--r);padding:clamp(20px,2.2vw,32px);box-shadow:0 30px 80px -50px rgba(0,0,0,.9)}
-  .embedbox{margin-top:16px;border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);border-radius:20px;min-height:118px;display:grid;place-items:center;text-align:left;padding:20px 22px;background:linear-gradient(135deg,rgba(61,220,151,.12),rgba(76,201,240,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  /* GHL voice embed hero */
+  .agenthero{display:grid;grid-template-columns:minmax(320px,1.05fr) minmax(320px,.95fr);gap:clamp(26px,4vw,58px);align-items:center}
+  .agenthero h1{font-size:clamp(42px,7vw,94px)}
+  @media (max-width:920px){.agenthero{grid-template-columns:1fr;text-align:left}.agentstage{min-height:360px}}
+  .agentstage{position:relative;min-height:clamp(430px,44vw,560px);display:grid;place-items:center}
+  .voicepanel{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.72));border:1px solid var(--line);border-radius:28px;padding:clamp(22px,2.6vw,38px);box-shadow:0 34px 90px -48px rgba(25,118,255,.38)}
+  .embedbox{margin-top:16px;border:1px solid rgba(25,118,255,.18);border-radius:24px;min-height:180px;display:grid;place-items:center;text-align:left;padding:24px 26px;background:linear-gradient(135deg,rgba(25,118,255,.10),rgba(124,58,237,.08));box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
   .embedbox strong{display:block;font-size:clamp(20px,2vw,30px);line-height:1.05;margin-bottom:8px}.embedbox .muted{font-size:clamp(14px,1.2vw,17px)!important;line-height:1.45}.embedbox code{display:none}
   body:not(.voice-mode) chat-widget{display:none!important}
-  body.voice-mode chat-widget{position:fixed!important;left:31vw!important;top:56vh!important;z-index:12!important;transform:translate(-50%,-50%) scale(.74);transform-origin:center center;filter:drop-shadow(0 0 42px rgba(76,201,240,.28))}
-  body.voice-mode .orbstage::after{content:"TAP THE MIC ORB";position:absolute;left:50%;bottom:8%;transform:translateX(-50%);z-index:11;color:rgba(232,241,255,.88);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;background:rgba(3,8,18,.56);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:9px 14px;box-shadow:0 0 34px rgba(61,220,151,.22)}
-  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;top:45vh!important;transform:translate(-50%,-50%) scale(.62)}}
-  @keyframes orbFloat{0%,100%{transform:translateY(-10px)}50%{transform:translateY(12px)}}
-  @keyframes orbGlow{from{filter:saturate(1)}to{filter:saturate(1.25) brightness(1.08)}}
-  @keyframes orbRing{to{transform:rotate(360deg)}}
-  @keyframes orbPulse{to{transform:scale(1.14);opacity:.72}}
+  body.voice-mode chat-widget{position:fixed!important;left:73vw!important;top:39vh!important;z-index:12!important;transform:translate(-50%,-50%) scale(.62);transform-origin:center center;filter:drop-shadow(0 24px 56px rgba(25,118,255,.24))}
+  body.voice-mode .agentstage::after{content:"TAP THE GHL MIC TO BEGIN";position:absolute;left:50%;bottom:5%;transform:translateX(-50%);z-index:11;color:#344054;font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;background:rgba(255,255,255,.82);border:1px solid rgba(16,24,40,.10);border-radius:999px;padding:9px 14px;box-shadow:0 16px 44px rgba(25,118,255,.13)}
+  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;top:39vh!important;transform:translate(-50%,-50%) scale(.58)}}
   @keyframes bar{from{height:18%;opacity:.45}to{height:88%;opacity:1}}
-  @media (prefers-reduced-motion:reduce){.orb,.orb::before,.orb::after,.orbcore,.wave i{animation:none}}
 
 </style>
 </head>
@@ -237,53 +217,64 @@
 
 <div id="app">
   <div class="topbar">
-    <div class="brand"><span class="dot"></span><span id="brandName">Vicron AI</span></div>
+    <div class="brand"><img class="brand-logo" src="assets/vicron-ai-logo.png" alt="Vicron AI Consulting"><span id="brandName" class="sr-only">Vicron AI</span></div>
     <div style="display:flex;gap:10px;align-items:center">
       <span class="cohost" id="cohost">ActionCOACH Tampa Bay</span>
-      <button class="iconbtn" id="muteBtn" title="Toggle the agent's voice">🔊 <span>Voice on</span></button>
+      <span class="pill" aria-label="Live demo status">💬 <b>Live agent demo</b></span>
     </div>
   </div>
 
   <main>
     <!-- 1. ATTRACT -->
     <section class="screen active" id="s-attract">
-      <div class="orbwrap">
-        <div class="orbstage" aria-hidden="true">
-          <div class="orb"><span class="orbcore"></span></div>
-          <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        </div>
+      <div class="agenthero">
         <div>
           <p class="eyebrow">Scaling Systems with AI</p>
-          <h1>Talk to your first<br><span class="grad">AI employee.</span></h1>
-          <p class="lede">Start with a live voice conversation. She’ll find the first system your business should automate next.</p>
+          <h1><span class="grad">Scaling your business with AI</span></h1>
+          <p class="lede">Meet your first AI Employee. Tap the GHL mic, talk through what is slowing your business down, and get a practical system recommendation.</p>
           <div class="livehint">
-            <span class="pill">🟢 <b>Live AI coach</b></span>
+            <span class="pill">💬 <b>Live AI agent</b></span>
             <span class="pill">🎙️ Speak naturally</span>
             <span class="pill">60–90 seconds</span>
           </div>
           <div class="row">
-            <button class="cta pulse" id="startBtn">Start Live Voice AI</button>
+            <button class="cta pulse" id="startBtn">Talk to the AI Agent</button>
             <button class="ghost" id="tapFallbackBtn">Room too loud? Tap instead</button>
           </div>
-          <p class="fineprint">The glowing orb is the live agent. If the room is noisy or the embed hiccups, the tap-through audit still works.</p>
+          <p class="fineprint">Home is the agent experience now — no separate booth page needed. The tap-through audit stays as a backup if the room is noisy.</p>
+        </div>
+        <div class="agentstage">
+          <div class="voicepanel">
+            <p class="eyebrow">AI Employee is ready</p>
+            <h2>Tap the GHL mic and start talking.</h2>
+            <div id="ghlVoiceMountHome" class="embedbox">
+              <div>
+                <strong>Live voice agent loading here.</strong>
+                <div class="muted" style="margin-top:8px;font-size:14px">If the mic widget does not appear, tap the button to start or use the tap-through backup.</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- 2. LEAD (avatar) -->
     <section class="screen" id="s-lead">
-      <div class="orbwrap">
-        <div class="orbstage" aria-hidden="true">
-          <div class="orb"><span class="orbcore"></span></div>
-          <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="agenthero">
+        <div class="agentstage" aria-hidden="true">
+          <div class="voicepanel">
+            <p class="eyebrow">Still here if needed</p>
+            <h2>Live AI agent</h2>
+            <p class="lede">Use the GHL mic widget on this screen, or switch to the tap-through audit.</p>
+          </div>
         </div>
         <div class="voicepanel">
           <p class="eyebrow">Live AI Systems Coach</p>
           <h2>Your live AI coach is ready.</h2>
-          <p class="lede">Tap the mic orb, then tell her what business you run and where things feel stuck.</p>
+          <p class="lede">Tap the GHL mic, then tell her what business you run and where things feel stuck.</p>
           <div id="ghlVoiceMount" class="embedbox">
             <div>
-              <strong>Tap the mic orb to begin.</strong>
+              <strong>Tap the GHL mic to begin.</strong>
               <div class="muted" style="margin-top:8px;font-size:14px">Have a 60-second conversation and get your first AI employee recommendation.</div>
             </div>
           </div>
@@ -402,14 +393,16 @@ var CONFIG = {
   voice: true,               // agent speaks; visitors can mute from the top-right
   idleResetSeconds: 75,      // reset to the attract screen after this much inactivity
 
-  // LeadConnector / GHL voice widget. Keep the Vicron orb UI as the wrapper; load this only
-  // when the visitor taps Start Live Voice AI.
+  // LeadConnector / GHL voice widget. The home page is the live agent experience;
+  // load the widget when the visitor taps Talk to the AI Agent.
   ghlVoiceWidget: {
     src: "https://widgets.leadconnectorhq.com/loader.js",
     resourcesUrl: "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
     widgetId: "6a70e9d875ab8940e72a3f6b"
   }
 };
+
+CONFIG.voice = false;
 
 /* ---- QR encoder (verified: decodes clean across QR versions 1-10) ---- */
 // Minimal QR encoder: byte mode, ECC level M, versions 1-10.
@@ -1001,16 +994,20 @@ var LEAKS = {
 
   state.muted = localStorage.getItem(LS_MUTE) === "1";
   function renderMute(){
-    $("#muteBtn").innerHTML = state.muted ? "🔇 <span>Voice off</span>" : "🔊 <span>Voice on</span>";
+    var btn = $("#muteBtn");
+    if (btn) btn.innerHTML = state.muted ? "🔇 <span>Voice off</span>" : "🔊 <span>Voice on</span>";
   }
-  renderMute();
-  $("#muteBtn").addEventListener("click", function(){
-    state.muted = !state.muted;
-    localStorage.setItem(LS_MUTE, state.muted ? "1" : "0");
-    if (avatar) avatar.muted = state.muted;
-    if (state.muted) stopSpeaking();
+  var muteBtn = $("#muteBtn");
+  if (muteBtn) {
     renderMute();
-  });
+    muteBtn.addEventListener("click", function(){
+      state.muted = !state.muted;
+      localStorage.setItem(LS_MUTE, state.muted ? "1" : "0");
+      if (avatar) avatar.muted = state.muted;
+      if (state.muted) stopSpeaking();
+      renderMute();
+    });
+  }
 
   /* ---------- avatar ---------- */
   var avatar = $("#avatar");
@@ -1060,6 +1057,7 @@ var LEAKS = {
     $("#resultEyebrow").textContent = "Your first AI system";
     try { if (avatar) { avatar.pause(); avatar.currentTime = 0; } } catch(e){}
     if (replayBtn) replayBtn.classList.remove("show");
+    document.body.classList.remove("voice-mode");
     show("attract");
   }
   ["click","touchstart","keydown","mousemove"].forEach(function(ev){
@@ -1167,9 +1165,9 @@ var LEAKS = {
   }
 
   function mountGhlVoice(){
-    var mount = $("#ghlVoiceMount");
+    var mount = $("#ghlVoiceMountHome") || $("#ghlVoiceMount");
     if (!mount || !CONFIG.ghlVoiceWidget || !CONFIG.ghlVoiceWidget.widgetId) return;
-    mount.innerHTML = '<div><strong>Tap the mic orb to begin.</strong><div class="muted" style="margin-top:8px;font-size:14px">Tell the AI what business you run and where things feel stuck.</div></div>';
+    mount.innerHTML = '<div><strong>Tap the GHL mic to begin.</strong><div class="muted" style="margin-top:8px;font-size:14px">Tell the AI what business you run and where things feel stuck.</div></div>';
     document.body.classList.add("voice-mode");
     if (document.querySelector('script[data-widget-id="' + CONFIG.ghlVoiceWidget.widgetId + '"]')) return;
     var s = document.createElement("script");
@@ -1178,11 +1176,16 @@ var LEAKS = {
     s.setAttribute("data-resources-url", CONFIG.ghlVoiceWidget.resourcesUrl);
     s.setAttribute("data-widget-id", CONFIG.ghlVoiceWidget.widgetId);
     document.body.appendChild(s);
+    setTimeout(function(){
+      var main = document.querySelector("main");
+      if (main) main.scrollTo({top:0, behavior:"smooth"});
+    }, 150);
   }
 
   $("#startBtn").addEventListener("click", function(){
     mountGhlVoice();
-    show("lead");
+    var main = document.querySelector("main");
+    if (main) main.scrollTo({top:0, behavior:"smooth"});
   });
   $("#tapFallbackBtn").addEventListener("click", startTapAudit);
   $("#leadNext").addEventListener("click", startTapAudit);
