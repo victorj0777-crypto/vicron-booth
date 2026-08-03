@@ -197,8 +197,9 @@
   .muted{color:var(--muted)}
 
   /* GHL voice embed hero */
-  .agenthero{display:grid;place-items:center;text-align:center;max-width:980px;margin:0 auto}
-  .agenthero h1{font-size:clamp(48px,8vw,112px)}
+  #s-attract.screen.active{margin:0}
+  .agenthero{display:grid;place-items:start center;text-align:center;max-width:1080px;margin:0 auto;padding-top:0;transform:translateY(clamp(-96px,-12vh,-68px))}
+  .agenthero h1{font-size:clamp(48px,8.4vw,118px)}
   .agenthero .lede{margin-left:auto;margin-right:auto;max-width:38ch}
   .agenthero .row,.agenthero .livehint{justify-content:center}
   @media (max-width:720px){.agenthero{text-align:left;place-items:start}.agenthero .row,.agenthero .livehint{justify-content:flex-start}.agenthero .lede{margin-left:0;margin-right:0}}
@@ -206,8 +207,12 @@
   .embedbox{margin-top:16px;border:1px solid rgba(25,118,255,.18);border-radius:24px;min-height:180px;display:grid;place-items:center;text-align:left;padding:24px 26px;background:linear-gradient(135deg,rgba(25,118,255,.10),rgba(124,58,237,.08));box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
   .embedbox strong{display:block;font-size:clamp(20px,2vw,30px);line-height:1.05;margin-bottom:8px}.embedbox .muted{font-size:clamp(14px,1.2vw,17px)!important;line-height:1.45}.embedbox code{display:none}
   body:not(.voice-mode) chat-widget{display:none!important}
-  body.voice-mode chat-widget{position:fixed!important;left:84vw!important;top:58vh!important;z-index:12!important;transform:translate(-50%,-50%) scale(1.02);transform-origin:center center;filter:drop-shadow(0 30px 70px rgba(25,118,255,.28))}
-  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;top:72vh!important;transform:translate(-50%,-50%) scale(.92)}}
+  body.voice-mode chat-widget{position:fixed!important;left:50%!important;top:94vh!important;z-index:12!important;transform:translate(-50%,-50%) scale(.78);transform-origin:center center;filter:drop-shadow(0 30px 70px rgba(25,118,255,.28))}
+  body.voice-mode #s-attract .lede,
+  body.voice-mode #s-attract .livehint,
+  body.voice-mode #s-attract .row,
+  body.voice-mode #s-attract .fineprint{opacity:0;pointer-events:none;transition:opacity .18s ease}
+  @media (max-width:900px){body.voice-mode chat-widget{left:50%!important;top:94vh!important;transform:translate(-50%,-50%) scale(.74)}}
   @keyframes bar{from{height:18%;opacity:.45}to{height:88%;opacity:1}}
 
 </style>
@@ -231,7 +236,7 @@
         <div>
           <p class="eyebrow">Scaling Systems with AI</p>
           <h1><span class="grad">Scaling your business with AI</span></h1>
-          <p class="lede">Meet your first AI Employee. Start a live voice conversation, talk through what is slowing your business down, and get a practical system recommendation.</p>
+          <p class="lede">Meet your first AI Employee. Start a live voice conversation and get a practical system recommendation for your business.</p>
           <div class="livehint">
             <span class="pill">💬 <b>Live AI agent</b></span>
             <span class="pill">🎙️ Speak naturally</span>
